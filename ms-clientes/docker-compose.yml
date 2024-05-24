@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: danrootpassword
+      MYSQL_DATABASE: dandb
+      MYSQL_USER: danuser
+      MYSQL_PASSWORD: danpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - clientes-net
+
+  phpmyadmin-dan:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: danuser
+      PMA_PASSWORD: danpassword
+    ports:
+      - "8086:80"
+    depends_on:
+      - mysql
+    networks:
+      - clientes-net
+
+  ms-clientes-svc:
+    image: ms-clientes-svc:latest
+    container_name: ms-clientes-svc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/dandb
+      SPRING_DATASOURCE_USERNAME: danuser
+      SPRING_DATASOURCE_PASSWORD: danpassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    ports:
+      - "6080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - clientes-net
+      - backend-net
+
+networks:
+  backend-net:
+    external: true
+  clientes-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+
