@@ -1,4 +1,4 @@
-package isi.dan.msclientes.servicios;
+package isi.dan.msclientes.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

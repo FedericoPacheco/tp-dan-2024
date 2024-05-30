@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import isi.dan.msclientes.model.Obra;
-import isi.dan.msclientes.servicios.ObraService;
+import isi.dan.msclientes.services.ObraService;
 
 import java.util.List;
 import java.util.Optional;

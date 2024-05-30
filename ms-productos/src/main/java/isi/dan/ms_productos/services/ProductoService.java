@@ -1,4 +1,4 @@
-package isi.dan.ms_productos.servicio;
+package isi.dan.ms_productos.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import isi.dan.ms_productos.conf.RabbitMQConfig;
 import isi.dan.ms_productos.dao.ProductoRepository;
 import isi.dan.ms_productos.dto.StockUpdateDTO;
-import isi.dan.ms_productos.modelo.Producto;
+import isi.dan.ms_productos.model.Producto;
 
 import java.util.List;
 

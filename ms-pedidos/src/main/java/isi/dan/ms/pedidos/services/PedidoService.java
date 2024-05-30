@@ -1,4 +1,4 @@
-package isi.dan.ms.pedidos.servicio;
+package isi.dan.ms.pedidos.services;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dao.PedidoRepository;
-import isi.dan.ms.pedidos.modelo.DetallePedido;
-import isi.dan.ms.pedidos.modelo.Pedido;
+import isi.dan.ms.pedidos.model.DetallePedido;
+import isi.dan.ms.pedidos.model.Pedido;
 
 import java.util.List;
 import org.slf4j.Logger;

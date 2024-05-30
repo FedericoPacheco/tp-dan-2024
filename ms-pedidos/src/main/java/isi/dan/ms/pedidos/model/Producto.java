@@ -1,8 +1,6 @@
-package isi.dan.ms.pedidos.modelo;
+package isi.dan.ms.pedidos.model;
 
 import java.math.BigDecimal;
-
-import org.springframework.data.annotation.Id;
 
 import lombok.Data;
 
@@ -13,6 +11,5 @@ public class Producto {
     private String nombre;
     private String descripcion;
     private BigDecimal precio;
-    
 
 }

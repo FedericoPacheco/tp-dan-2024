@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import isi.dan.ms_productos.modelo.Producto;
-import isi.dan.ms_productos.servicio.ProductoService;
+import isi.dan.ms_productos.model.Producto;
+import isi.dan.ms_productos.services.ProductoService;
 
 import java.util.List;
 

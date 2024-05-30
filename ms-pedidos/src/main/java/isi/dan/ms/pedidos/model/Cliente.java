@@ -1,4 +1,4 @@
-package isi.dan.ms.pedidos.modelo;
+package isi.dan.ms.pedidos.model;
 
 
 import lombok.Data;

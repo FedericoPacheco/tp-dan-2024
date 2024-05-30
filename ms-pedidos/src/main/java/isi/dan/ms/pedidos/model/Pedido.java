@@ -1,4 +1,4 @@
-package isi.dan.ms.pedidos.modelo;
+package isi.dan.ms.pedidos.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
