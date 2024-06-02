@@ -44,6 +44,7 @@ services:
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      DEFAULT-MAXIMO-DESCUBIERTO: 100000.0
     ports:
       - "6080:8080"
     depends_on:

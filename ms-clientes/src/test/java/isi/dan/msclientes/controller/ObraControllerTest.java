@@ -3,7 +3,7 @@ package isi.dan.msclientes.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import isi.dan.msclientes.model.Obra;
-import isi.dan.msclientes.services.ObraService;
+import isi.dan.msclientes.service.ObraService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

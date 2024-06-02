@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import isi.dan.msclientes.model.EstadoObra;
 import isi.dan.msclientes.model.Obra;
-import isi.dan.msclientes.services.ObraService;
+import isi.dan.msclientes.service.ObraService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -24,8 +26,11 @@ public class ObraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Obra> getById(@PathVariable Integer id) {
-        Optional<Obra> obra = obraService.findById(id);
-        return obra.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Obra> optionalObra = obraService.findById(id);
+        if (optionalObra.isPresent())
+            return ResponseEntity.ok(optionalObra.get());
+        else
+            return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -34,20 +39,32 @@ public class ObraController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Obra> update(@PathVariable Integer id, @RequestBody Obra obra) {
-        if (!obraService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Obra> update(@RequestBody Obra obra) {
+        Optional<Obra> optionalObra = obraService.findById(obra.getId());
+        if (optionalObra.isPresent()) {
+            obraService.update(obra);
+            return ResponseEntity.ok(obra);
         }
-        obra.setId(id);
-        return ResponseEntity.ok(obraService.update(obra));
+        else return ResponseEntity.notFound().build();    
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (!obraService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+        if (obraService.findById(id).isPresent()) {
+            obraService.deleteById(id);
+            return ResponseEntity.noContent().build();
         }
-        obraService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        else return ResponseEntity.notFound().build();
     }
+
+    @PutMapping("/{idObra}/estado/{nuevoEstado}/usuario/{idUsuario}")
+    public ResponseEntity<Obra> updateEstado(@PathVariable Integer idObra, @PathVariable EstadoObra nuevoEstado, @PathVariable Integer idUsuario) {
+        try {
+            return ResponseEntity.ok(obraService.cambiarEstado(idUsuario, idObra, nuevoEstado));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    } 
 }
