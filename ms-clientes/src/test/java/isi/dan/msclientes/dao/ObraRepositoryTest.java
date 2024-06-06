@@ -3,22 +3,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.containers.MySQLContainer;
+//import org.testcontainers.containers.PostgreSQLContainer;
 
 import isi.dan.msclientes.model.EstadoObra;
 import isi.dan.msclientes.model.Obra;
@@ -28,79 +23,84 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-// https://docs.spring.io/spring-boot/reference/testing/testcontainers.html
-// https://java.testcontainers.org/modules/databases/jdbc/
-// https://www.youtube.com/watch?v=erp-7MCK5BU
-
+/*
+* General:
+* https://docs.spring.io/spring-boot/reference/testing/testcontainers.html
+* https://java.testcontainers.org/modules/databases/jdbc/
+* https://www.youtube.com/watch?v=erp-7MCK5BU
+* https://testcontainers.com/modules/mysql/
+*
+* Proyectos probados con mysql y postres. Todos tienen distintas anotaciones:
+* https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/
+* https://danielme.com/2023/04/13/testing-spring-boot-docker-with-testcontainers-and-junit-5-mysql-and-other-images/
+* https://github.com/ivangfr/springboot-testing-mysql
+*/
 
 @ActiveProfiles("db") // Usar application-db.properties
-//@ExtendWith(SpringExtension.class) // Spring es cargado para tests
-//@DataJpaTest // Usar solo componentes de JPA
-@SpringBootTest
-@Testcontainers // Usar db mysql de prueba dentro de container docker
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Desactivar db H2 que usa springboot por defecto
+@DataJpaTest // Usar solo componentes de JPA
+//@SpringBootTest
+@Testcontainers // Usar db de prueba dentro de container docker
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Desactivar db H2 que usa springboot por defecto
 public class ObraRepositoryTest {
 
-    Obra obra;
+    Obra obra1, obra2, obra3;
     Logger log = LoggerFactory.getLogger(ObraRepositoryTest.class);
 
-    //@SuppressWarnings("resource")
     @Container
-    //@ServiceConnection
-    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.36");
-    //        .withDatabaseName("testdb")
-    //        .withUsername("test")
-    //        .withPassword("test");
+    @ServiceConnection
+    //public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine");
+    public static MySQLContainer<?> container = new MySQLContainer<>("mysql:latest");
 
     @Autowired
     private ObraRepository obraRepository;
 
-    
-    // Pasar credenciales (en application-db.properties estan con ${...})
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
-    }
-    
-
     @BeforeAll
     static void startContainer() {
-        //mysqlContainer.start();
+        container.start();
     }
 
     @BeforeEach
     void iniciarDatos() {
-
-        
-
         obraRepository.deleteAll();
         
-        obra = new Obra();
-        obra.setDireccion("Juan del Campillo 3047");
-        obra.setPresupuesto(BigDecimal.valueOf(100.0));
-        obra.setLatitud(BigDecimal.valueOf(-31.628810));
-        obra.setLongitud(BigDecimal.valueOf(-60.707567));
+        obra1 = new Obra();
+        obra1.setDireccion("Juan del Campillo 3047");
+        obra1.setPresupuesto(BigDecimal.valueOf(100.0));
+        obra1.setLatitud(BigDecimal.valueOf(-31.628810));
+        obra1.setLongitud(BigDecimal.valueOf(-60.707567));
+        obra1.setEstado(EstadoObra.PENDIENTE);
+        
+        obra2 = new Obra();
+        obra2.setDireccion(obra1.getDireccion());
+        obra2.setPresupuesto(obra1.getPresupuesto());
+        obra2.setLatitud(obra1.getLatitud());
+        obra2.setLongitud(obra1.getLongitud());
+        obra2.setEstado(EstadoObra.HABILITADA);
+
+        obra3 = new Obra();
+        obra3.setDireccion(obra1.getDireccion());
+        obra3.setPresupuesto(obra1.getPresupuesto());
+        obra3.setLatitud(obra1.getLatitud());
+        obra3.setLongitud(obra1.getLongitud());
+        obra3.setEstado(EstadoObra.FINALIZADA);
     }
 
     @AfterAll
     static void stopContainer() {
-        //mysqlContainer.close(); // ?? 
-        //mysqlContainer.stop();
+        container.stop();
     }
 
     @Test
     void saveFindByIdAndDelete() {
-        obra = obraRepository.save(obra);
-        Obra obraDb = obraRepository.findById(obra.getId()).get();
+        obra1 = obraRepository.save(obra1);
+        Obra obra1Db = obraRepository.findById(obra1.getId()).get();
         
-        log.info(obra.toString());
-        log.info(obraDb.toString());
+        log.info("Obra: " + obra1.toString());
+        log.info("Obra DB: " + obra1Db.toString());
 
-        assertTrue(obra.equals(obraDb));
+        assertTrue(obra1.equals(obra1Db));
 
-        obraRepository.deleteById(obra.getId());
+        obraRepository.deleteById(obra1.getId());
         List<Obra> obras = obraRepository.findAll();
 
         assertTrue(obras.isEmpty());
@@ -108,23 +108,20 @@ public class ObraRepositoryTest {
 
     @Test 
     void findByEstado() {
-        obra.setEstado(EstadoObra.PENDIENTE);
-        obraRepository.save(obra);
+        obraRepository.save(obra1);  
+        obraRepository.save(obra2);    
+        obraRepository.save(obra3);
 
-        obra.setEstado(EstadoObra.HABILITADA);
-        obraRepository.save(obra);
-
-        obra.setEstado(EstadoObra.FINALIZADA);
-        obraRepository.save(obra);
+        log.info("Obras: " + obraRepository.findAll().toString());
 
         List<Obra> obrasPendientes = obraRepository.findByEstado(EstadoObra.PENDIENTE);
         List<Obra> obrasHabilitadas = obraRepository.findByEstado(EstadoObra.HABILITADA);
         List<Obra> obrasFinalizadas = obraRepository.findByEstado(EstadoObra.FINALIZADA);
 
-        log.info(obrasPendientes.toString());
-        log.info(obrasHabilitadas.toString());
-        log.info(obrasFinalizadas.toString());
-
+        log.info("Obras pendientes: " + obrasPendientes.toString());
+        log.info("Obras habilitadas: " + obrasHabilitadas.toString());
+        log.info("Obras finalizadas: " + obrasFinalizadas.toString());
+        
         assertTrue(obrasPendientes.size() == 1);
         assertTrue(obrasHabilitadas.size() == 1);
         assertTrue(obrasFinalizadas.size() == 1);

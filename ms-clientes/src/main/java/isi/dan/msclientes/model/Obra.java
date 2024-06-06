@@ -41,6 +41,10 @@ public class Obra {
     private BigDecimal presupuesto;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(16)")
+    //@Type(PostgreSQLEnumType.class)
+    //@JdbcType(PostgreSQLEnumJdbcType.class)
+    //@JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private EstadoObra estado;
 
     @ManyToOne
