@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import isi.dan.msclientes.model.Cliente;
 import isi.dan.msclientes.service.ClienteService;
+import isi.dan.msclientes.service.ObraService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class ClienteControllerTest {
 
     @MockBean
     private ClienteService clienteService;
+
+    @MockBean
+    private ObraService obraService;
 
     private Cliente cliente;
 
