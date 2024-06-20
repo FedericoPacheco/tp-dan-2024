@@ -18,11 +18,18 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cliente", schema = "ms_clientes")
-@Data
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Cliente.class)
 public class Cliente {
     
@@ -60,5 +67,13 @@ public class Cliente {
         for (Obra obra: obrasAsignadas)
             descubierto.add(obra.getPresupuesto());
         return descubierto;
+    }
+
+    // Escrito manualmente para evitar bucles infinitos al llamar
+    @Override
+    public String toString() {
+        return "Cliente [id=" + id + ", nombre=" + nombre + ", correoElectronico=" + correoElectronico + ", cuit="
+                + cuit + ", maximoDescubierto=" + maximoDescubierto + ", maximaCantidadObrasEnEjecucion="
+                + maximaCantidadObrasEnEjecucion + "]";
     }
 }

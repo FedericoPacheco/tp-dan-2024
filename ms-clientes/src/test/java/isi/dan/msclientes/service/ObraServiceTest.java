@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -111,10 +110,11 @@ public class ObraServiceTest {
     }
 
     @Test
-    public void cambiarEstadoHabilitadaAPendiente() {
+    public void cambiarEstadoHabilitadaAPendiente() throws NoSuchElementException, IllegalStateException, Exception {
         cliente.getUsuariosHabilitados().add(usuario);
         usuario.setCliente(cliente);
         obra.setEstado(EstadoObra.HABILITADA);
+        obra.setCliente(cliente);
 
         assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.PENDIENTE));
         verify(obraRepository, times(1)).save(obra);
@@ -125,7 +125,7 @@ public class ObraServiceTest {
         cliente.getUsuariosHabilitados().add(usuario);
         usuario.setCliente(cliente);
         obra.setEstado(EstadoObra.HABILITADA);
-        obraService.asignarCliente(usuario.getId(), cliente.getId(), obra.getId());
+        obra.setCliente(cliente);
         
         List<Obra> obrasPend = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -136,28 +136,32 @@ public class ObraServiceTest {
         Mockito.when(obraRepository.findByEstado(EstadoObra.PENDIENTE)).thenReturn(obrasPend);
 
         assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.FINALIZADA));
+        verify(obraRepository, times(1)).save(obra);
         assertTrue(obrasPend.get(0).getEstado().equals(EstadoObra.HABILITADA));
-        verify(obraRepository, times(2)).save(obra);
+        verify(obraRepository, times(1)).save(obrasPend.get(0));
     }
 
     @Test
-    public void cambiarEstadoPendienteAHabilitada() {
+    public void cambiarEstadoPendienteAHabilitada() throws NoSuchElementException, IllegalStateException, Exception {
         cliente.getUsuariosHabilitados().add(usuario);
         usuario.setCliente(cliente);
         obra.setEstado(EstadoObra.PENDIENTE);
+        obra.setPresupuesto(BigDecimal.valueOf(100));
+        obra.setCliente(cliente);
 
-        // Cubrir maxima cantidad de obras en ejecucion
+        // Maxima cantidad de obras en ejecucion
         cliente.setMaximaCantidadObrasEnEjecucion(0);
         assertThrows(Exception.class, () -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.HABILITADA));
         verify(obraRepository, times(0)).save(obra);
 
-        // Cubrir maximo descubierto
+        // Maximo descubierto
         cliente.setMaximaCantidadObrasEnEjecucion(Integer.MAX_VALUE);
         cliente.setMaximoDescubierto(BigDecimal.valueOf(-1));
         assertThrows(Exception.class, () -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.HABILITADA));
         verify(obraRepository, times(0)).save(obra);
 
         // Todo en regla
+        cliente.setMaximaCantidadObrasEnEjecucion(Integer.MAX_VALUE);
         cliente.setMaximoDescubierto(BigDecimal.valueOf(Integer.MAX_VALUE));
         assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.HABILITADA));
         verify(obraRepository, times(1)).save(obra);
@@ -165,6 +169,31 @@ public class ObraServiceTest {
 
     @Test
     public void cambiarEstadoPendienteAFinalizada() {
+        cliente.getUsuariosHabilitados().add(usuario);
+        usuario.setCliente(cliente);
+        obra.setEstado(EstadoObra.PENDIENTE);
+        obra.setCliente(cliente);
         
+        assertThrows(Exception.class, () -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.FINALIZADA));
+        verify(obraRepository, times(0)).save(obra);
+    }
+
+    @Test
+    public void cambiarEstadoTriviales() {
+        cliente.getUsuariosHabilitados().add(usuario);
+        cliente.setMaximaCantidadObrasEnEjecucion(Integer.MAX_VALUE);
+        cliente.setMaximoDescubierto(BigDecimal.valueOf(Integer.MAX_VALUE));
+        usuario.setCliente(cliente);
+        obra.setCliente(cliente);
+        obra.setPresupuesto(BigDecimal.valueOf(100));
+
+        obra.setEstado(EstadoObra.PENDIENTE);
+        assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.PENDIENTE));
+        
+        obra.setEstado(EstadoObra.HABILITADA);
+        assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.HABILITADA));
+
+        obra.setEstado(EstadoObra.FINALIZADA);
+        assertDoesNotThrow(() -> obraService.cambiarEstado(usuario.getId(), obra.getId(), EstadoObra.FINALIZADA));
     }
 }

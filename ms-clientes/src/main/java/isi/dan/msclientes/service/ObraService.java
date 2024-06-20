@@ -92,7 +92,6 @@ public class ObraService {
         if (usuario.getCliente().equals(cliente)) {
             if (obra.getEstado().equals(EstadoObra.HABILITADA)) {
                 if (nuevoEstado.equals(EstadoObra.FINALIZADA)) {
-                    
                     List<Obra> obrasPendientes = obraRepository.findByEstado(EstadoObra.PENDIENTE);
                     if (obrasPendientes.size() > 0) {
                         Optional<Obra> obraPendiente = obrasPendientes.stream().min((o1, o2) -> o1.getId().compareTo(o2.getId()));
@@ -100,7 +99,8 @@ public class ObraService {
                         obraRepository.save(obraPendiente.get());
                     }
                 }
-                obra.setEstado(nuevoEstado);
+                //obra.setEstado(nuevoEstado);
+                //obraRepository.save(obra);
             }
             else if (obra.getEstado().equals(EstadoObra.PENDIENTE)) {
                 if (cliente.getObrasAsignadas().size() >= cliente.getMaximaCantidadObrasEnEjecucion())
@@ -109,10 +109,14 @@ public class ObraService {
                     throw new Exception("El cliente con id:" + cliente.getId() + " llegó al máximo descubierto");
                 else if(nuevoEstado.equals(EstadoObra.FINALIZADA))
                     throw new Exception("La obra con id " + idObra + " no puede pasarse de PENDIENTE a FINALIZADA");
-                else 
-                    obra.setEstado(nuevoEstado);
+                else { 
+                    //obra.setEstado(nuevoEstado);
+                    //obraRepository.save(obra);
+                }
             }
+            obra.setEstado(nuevoEstado);
             obraRepository.save(obra);
+            
             return obra;
         }
         else throw new Exception("El usuario con id: " + idUsuario + " no tiene permisos para cambiar el estado de la obra");
