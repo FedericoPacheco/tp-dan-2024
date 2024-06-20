@@ -1,6 +1,7 @@
 package isi.dan.msclientes.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -48,17 +49,16 @@ public class Cliente {
 
     @Column(name = "obras_asignadas")
     @OneToMany(mappedBy = "cliente")
-    private List<Obra> obrasAsignadas;
+    private List<Obra> obrasAsignadas = new ArrayList<>();
 
     @Column(name = "usuarios_habilitados")
     @OneToMany(mappedBy = "cliente")
-    private List<UsuarioHabilitado> usuariosHabilitados;
+    private List<UsuarioHabilitado> usuariosHabilitados = new ArrayList<>();
 
     public BigDecimal getDescubierto() {
         BigDecimal descubierto = new BigDecimal(0.0);
         for (Obra obra: obrasAsignadas)
             descubierto.add(obra.getPresupuesto());
-
         return descubierto;
     }
 }

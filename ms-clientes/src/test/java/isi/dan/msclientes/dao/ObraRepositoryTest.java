@@ -55,12 +55,12 @@ public class ObraRepositoryTest {
     private ObraRepository obraRepository;
 
     @BeforeAll
-    static void startContainer() {
+    static void beforeAll() {
         container.start();
     }
 
     @BeforeEach
-    void iniciarDatos() {
+    void beforeEach() {
         obraRepository.deleteAll();
         
         obra1 = new Obra();
@@ -86,7 +86,7 @@ public class ObraRepositoryTest {
     }
 
     @AfterAll
-    static void stopContainer() {
+    static void afterAll() {
         container.stop();
     }
 

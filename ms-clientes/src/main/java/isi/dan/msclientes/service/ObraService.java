@@ -75,11 +75,12 @@ public class ObraService {
     /* 
      * Primero se verifica que un usuario habilitado para el cliente de la obra realice el cambio de estado.
      * Luego, se considera que las transiciones de estado válidas son:
-     * HABILITADA -> PENDIENTE: no hacer nada más
+     * HABILITADA -> PENDIENTE: no hacer nada
      * HABILITADA -> FINALIZADA: se busca la obra pendiente con id más bajo y se pone HABILITADA
      * PENDIENTE -> HABILITADA: se verifica que no se exceda la cantidad máxima de obras en ejecución y el máximo descubierto
      * HABILITADA -> HABILITADA: trivial
      * PENDIENTE -> PENDIENTE: trivial
+     * FINALIZADA -> FINALIZADA: trivial
      * Si el comportamiento fuera más complejo podría considerarse usar el patrón de diseño state.
      */
     public Obra cambiarEstado(Integer idUsuario, Integer idObra, EstadoObra nuevoEstado) throws NoSuchElementException, Exception {
@@ -90,15 +91,16 @@ public class ObraService {
 
         if (usuario.getCliente().equals(cliente)) {
             if (obra.getEstado().equals(EstadoObra.HABILITADA)) {
-                obra.setEstado(nuevoEstado);
                 if (nuevoEstado.equals(EstadoObra.FINALIZADA)) {
+                    
                     List<Obra> obrasPendientes = obraRepository.findByEstado(EstadoObra.PENDIENTE);
-                    if (obrasPendientes.size() > 0){
+                    if (obrasPendientes.size() > 0) {
                         Optional<Obra> obraPendiente = obrasPendientes.stream().min((o1, o2) -> o1.getId().compareTo(o2.getId()));
                         obraPendiente.get().setEstado(EstadoObra.HABILITADA);
                         obraRepository.save(obraPendiente.get());
                     }
                 }
+                obra.setEstado(nuevoEstado);
             }
             else if (obra.getEstado().equals(EstadoObra.PENDIENTE)) {
                 if (cliente.getObrasAsignadas().size() >= cliente.getMaximaCantidadObrasEnEjecucion())
