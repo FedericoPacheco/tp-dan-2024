@@ -65,7 +65,8 @@ public class Cliente {
     public BigDecimal getDescubierto() {
         BigDecimal descubierto = new BigDecimal(0.0);
         for (Obra obra: obrasAsignadas)
-            descubierto.add(obra.getPresupuesto());
+            if (obra.getPresupuesto() != null)
+                descubierto.add(obra.getPresupuesto());
         return descubierto;
     }
 

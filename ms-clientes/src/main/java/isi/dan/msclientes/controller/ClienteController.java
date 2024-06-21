@@ -81,9 +81,12 @@ public class ClienteController {
     @PutMapping("/{idCliente}/obra/{idObra}/usuario/{idUsuario}")
     public ResponseEntity<Cliente> putObra(@PathVariable Integer idCliente, @PathVariable Integer idObra, @PathVariable Integer idUsuario) {
         try {
-            return ResponseEntity.ok(obraService.asignarCliente(idUsuario, idCliente, idObra));
+            Cliente cliente = obraService.asignarCliente(idUsuario, idCliente, idObra);
+            log.info("Obra asignada exitosamente!");
+            return ResponseEntity.ok(cliente);
+            
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
