@@ -3,8 +3,10 @@ package isi.dan.msclientes.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import isi.dan.msclientes.model.Cliente;
+import isi.dan.msclientes.model.UsuarioHabilitado;
 import isi.dan.msclientes.service.ClienteService;
 import isi.dan.msclientes.service.ObraService;
+import isi.dan.msclientes.service.UsuarioHabilitadoService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,7 +36,11 @@ public class ClienteControllerTest {
     @MockBean
     private ObraService obraService;
 
+    @MockBean
+    private UsuarioHabilitadoService usuarioHabilitadoService;
+
     private Cliente cliente;
+    private UsuarioHabilitado usuario;
 
     @BeforeEach
     void setUp() {
@@ -42,6 +49,10 @@ public class ClienteControllerTest {
         cliente.setNombre("Test Cliente");
         cliente.setCorreoElectronico("test@cliente.com");
         cliente.setCuit("12998887776");
+
+        usuario = new UsuarioHabilitado();
+        usuario.setId(1);
+        cliente.setUsuariosHabilitados(Collections.singletonList(usuario));
     }
 
     @Test
@@ -103,6 +114,21 @@ public class ClienteControllerTest {
         mockMvc.perform(delete("/api/clientes/1"))
                 .andExpect(status().isNoContent());
     }
+
+
+    @Test
+    void putUsuario() throws Exception {
+        Mockito.when(usuarioHabilitadoService.asignarCliente(1, 1)).thenReturn(cliente);
+        mockMvc.perform(put("/api/clientes/1/usuario/1"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.usuariosHabilitados[0].id").value(usuario.getId()));
+
+
+        Mockito.when(usuarioHabilitadoService.asignarCliente(2, 2)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(put("/api/clientes/2/usuario/2"))
+               .andExpect(status().isNotFound());
+        }
+
 
     private static String asJsonString(final Object obj) {
         try {
