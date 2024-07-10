@@ -92,14 +92,15 @@ public class ObraServiceTest {
         verify(obraRepository, times(1)).save(obra);
     }
 
+    /*
     @Test 
     public void asignarClienteUsuarioHabilitadoObraFinalizada() {
         cliente.getUsuariosHabilitados().add(usuario);
         obra.setEstado(EstadoObra.FINALIZADA); // No debe hacerse asi en produccion; usar cambiarEstado()
         
-        // No se tira una excepcion y se guarda una unica vez en el repo
         assertThrows(IllegalStateException.class, () -> obraService.asignarCliente(usuario.getId(), cliente.getId(), obra.getId()));
     }
+    */
 
     // -----------------------------------------------------------------------------------------------------------------------------------------
 

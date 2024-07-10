@@ -47,9 +47,13 @@ public class ObraService {
         obraRepository.deleteById(id);
     }
 
-    /* Primero se verifica que el usuario este habilitado para el cliente.
-     * Luego se verifica que el estado de la obra sea PENDIENTE o HABILITADA antes de asignársela al cliente.
-     * (el enunciado es un poco ambiguo)
+    /* 
+     * Enunciado: "Cuando se asinga una obra a un cliente se debe verificar el estado de habilitación." 
+     * Problema: no se puede verificar que la obra esté HABILITADA porque los criterios para que esté
+     * en dicho estado dependen de la cantidad máxima de obras en ejecución y el máximo descubierto del cliente
+     * que se está pretendiendo asignar. 
+     * Solución: solo se verifica que el usuario este habilitado para el cliente. También se inicializa la obra a PENDIENTE,
+     * puesto que desde ese estado puede transicionar a HABILITADA con cambiarEstado() verificando los criterios comentados
      */
     public Cliente asignarCliente(Integer idUsuario, Integer idCliente, Integer idObra) throws NoSuchElementException, IllegalStateException, Exception {
         
@@ -58,16 +62,16 @@ public class ObraService {
         Obra obra = obraRepository.findById(idObra).get();
 
         if (cliente.getUsuariosHabilitados().contains(usuario)) {
-            if (obra.getEstado().equals(EstadoObra.PENDIENTE) || obra.getEstado().equals(EstadoObra.HABILITADA)) {
+            //if (obra.getEstado().equals(EstadoObra.HABILITADA)) {
                 obra.setCliente(cliente);
+                obra.setEstado(EstadoObra.PENDIENTE); 
                 cliente.getObrasAsignadas().add(obra);
                 
                 obraRepository.save(obra);
                 clienteRepository.save(cliente); // Tecnicamente no es necesario
 
                 return cliente;
-            }
-            else throw new IllegalStateException("La obra con id: " + obra.getId() + " debe estar habilitada para asignarle un cliente");
+            //} else throw new IllegalStateException("La obra con id: " + obra.getId() + " debe estar habilitada para asignarle un cliente");
         }
         else throw new Exception("El usuario con id: " + idUsuario + " no puede realizar operaciones sobre el cliente con id: " + idCliente);
     }
@@ -90,32 +94,31 @@ public class ObraService {
         Cliente cliente = obra.getCliente();
 
         if (usuario.getCliente().equals(cliente)) {
-            if (obra.getEstado().equals(EstadoObra.HABILITADA)) {
-                if (nuevoEstado.equals(EstadoObra.FINALIZADA)) {
-                    List<Obra> obrasPendientes = obraRepository.findByEstado(EstadoObra.PENDIENTE);
-                    if (obrasPendientes.size() > 0) {
-                        Optional<Obra> obraPendiente = obrasPendientes.stream().min((o1, o2) -> o1.getId().compareTo(o2.getId()));
-                        obraPendiente.get().setEstado(EstadoObra.HABILITADA);
-                        obraRepository.save(obraPendiente.get());
-                    }
+            if (nuevoEstado != null) {
+                if (obra.getEstado().equals(EstadoObra.PENDIENTE)) {
+                    if (cliente.getObrasAsignadas().size() >= cliente.getMaximaCantidadObrasEnEjecucion())
+                        throw new Exception("El cliente con id:" + cliente.getId() + "llego a limite de obras asignadas");
+                    else if(cliente.getDescubierto().compareTo(cliente.getMaximoDescubierto()) >= 0)
+                        throw new Exception("El cliente con id:" + cliente.getId() + " llegó al máximo descubierto");
+                    else if(nuevoEstado.equals(EstadoObra.FINALIZADA))
+                        throw new Exception("La obra con id " + idObra + " no puede pasarse de PENDIENTE a FINALIZADA");
+                    // else: nuevoEstado es PENDIENTE o HABILITADA
+                } 
+                else if (obra.getEstado().equals(EstadoObra.HABILITADA)) {
+                    if (nuevoEstado.equals(EstadoObra.FINALIZADA)) {
+                        List<Obra> obrasPendientes = obraRepository.findByEstado(EstadoObra.PENDIENTE);
+                        if (obrasPendientes.size() > 0) {
+                            Optional<Obra> obraPendiente = obrasPendientes.stream().min((o1, o2) -> o1.getId().compareTo(o2.getId()));
+                            obraPendiente.get().setEstado(EstadoObra.HABILITADA);
+                            obraRepository.save(obraPendiente.get());
+                        }
+                    } // else: nuevoEstado es PENDIENTE O HABILITADA
                 }
-                //obra.setEstado(nuevoEstado);
-                //obraRepository.save(obra);
+                
+                obra.setEstado(nuevoEstado);
+                obraRepository.save(obra);
             }
-            else if (obra.getEstado().equals(EstadoObra.PENDIENTE)) {
-                if (cliente.getObrasAsignadas().size() >= cliente.getMaximaCantidadObrasEnEjecucion())
-                    throw new Exception("El cliente con id:" + cliente.getId() + "llego a limite de obras asignadas");
-                else if(cliente.getDescubierto().compareTo(cliente.getMaximoDescubierto()) >= 0)
-                    throw new Exception("El cliente con id:" + cliente.getId() + " llegó al máximo descubierto");
-                else if(nuevoEstado.equals(EstadoObra.FINALIZADA))
-                    throw new Exception("La obra con id " + idObra + " no puede pasarse de PENDIENTE a FINALIZADA");
-                else { 
-                    //obra.setEstado(nuevoEstado);
-                    //obraRepository.save(obra);
-                }
-            }
-            obra.setEstado(nuevoEstado);
-            obraRepository.save(obra);
+            else throw new Exception("El nuevo estado no puede ser null");
             
             return obra;
         }

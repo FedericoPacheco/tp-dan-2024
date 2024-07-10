@@ -1,3 +1,4 @@
+
 package isi.dan.msclientes.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
