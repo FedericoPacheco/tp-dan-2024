@@ -1,6 +1,10 @@
 package isi.dan.msclientes.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -10,12 +14,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "ms_clientes_cliente")
-@Data
+@Table(name = "cliente", schema = "ms_clientes")
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Cliente.class)
 public class Cliente {
     
@@ -26,12 +40,41 @@ public class Cliente {
 
     private String nombre;
 
+    @Email(message = "El correo electrónico es inválido")
     @Column(name = "correo_electronico")
     private String correoElectronico;
 
     private String cuit;
 
-    @Column(name="maximo_descubierto")
+    @Value("${ms-clientes.default-maximo-descubierto}")
+    @Min(value = 1, message = "El maximo descubierto debe ser mayor que 0")
+    @Column(name = "maximo_descubierto")
     private BigDecimal maximoDescubierto;
-    
+
+    @Column(name = "maxima_cantidad_obras_en_ejecucion")
+    private Integer maximaCantidadObrasEnEjecucion;
+
+    @Column(name = "obras_asignadas")
+    @OneToMany(mappedBy = "cliente")
+    private List<Obra> obrasAsignadas = new ArrayList<>();
+
+    @Column(name = "usuarios_habilitados")
+    @OneToMany(mappedBy = "cliente")
+    private List<UsuarioHabilitado> usuariosHabilitados = new ArrayList<>();
+
+    public BigDecimal getDescubierto() {
+        BigDecimal descubierto = new BigDecimal(0.0);
+        for (Obra obra: obrasAsignadas)
+            if (obra.getPresupuesto() != null)
+                descubierto.add(obra.getPresupuesto());
+        return descubierto;
+    }
+
+    // Escrito manualmente para evitar bucles infinitos al llamar
+    @Override
+    public String toString() {
+        return "Cliente [id=" + id + ", nombre=" + nombre + ", correoElectronico=" + correoElectronico + ", cuit="
+                + cuit + ", maximoDescubierto=" + maximoDescubierto + ", maximaCantidadObrasEnEjecucion="
+                + maximaCantidadObrasEnEjecucion + "]";
+    }
 }

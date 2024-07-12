@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import isi.dan.ms_productos.conf.RabbitMQConfig;
 import isi.dan.ms_productos.dao.ProductoRepository;
-import isi.dan.ms_productos.dto.StockUpdateDTO;
 import isi.dan.ms_productos.model.Producto;
 
 import java.util.List;

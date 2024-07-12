@@ -1,0 +1,108 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "isi.dan.tp-integrador",
+    "dateExported": "2024-07-10T19:39:53.231Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "931bbaee-be3c-447e-ab7e-2b7484273262",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "altaCliente",
+            "url": "http://localhost:6080/api/clientes",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-07-10T19:19:43.124Z",
+            "modified": "2024-07-10T19:28:29.080Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nombre\": \"TP DAN\",\n  \"correoElectronico\": \"tp-dan@test.com\",\n  \"cuit\": \"1234567889\",\n  \"maximoDescubierto\": 2147483647.0,\n  \"maximaCantidadObrasEnEjecucion\": 2147483647\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "975d9b8f-f788-4551-b75d-fd0c064c17b7",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "altaObra",
+            "url": "http://localhost:6080/api/obras",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-07-10T19:26:46.294Z",
+            "modified": "2024-07-10T19:28:31.725Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"direccion\": \"Lavaisse 610\",\n  \"latitud\": -31.616769,\n  \"longitud\": -60.675446,\n  \"presupuesto\": 2147483647\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "fb1550fb-ea48-407f-bbf5-186899a1b1d5",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "altaUsuarioHabilitado",
+            "url": "http://localhost:6080/api/usuarios-habilitados",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-07-10T19:29:16.943Z",
+            "modified": "2024-07-10T19:30:41.291Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nombre\": \"Federico\",\n  \"Pacheco\": \"Pacheco\",\n  \"dni\": 42870781,\n  \"correoElectronico\": \"fpachecopilan@frsf.utn.edu.ar\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "53473f87-547b-4b62-a86a-f644429e9a76",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "habilitarUsuarioEnCliente",
+            "url": "http://localhost:6080/api/clientes/1/usuario/1",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2024-07-10T19:31:07.816Z",
+            "modified": "2024-07-10T19:35:03.186Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "9cebc160-5aae-4fea-929a-d515c0717e00",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "asignarObraACliente",
+            "url": "http://localhost:6080/api/clientes/1/obra/1/usuario/1",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2024-07-10T19:36:03.565Z",
+            "modified": "2024-07-10T19:37:01.118Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "be58dfeb-e5d8-44ab-9ab8-617830379d70",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "",
+            "name": "cambiarEstadoObra",
+            "url": "http://localhost:6080/api/obras/1/estado/HABILITADA/usuario/1",
+            "method": "PUT",
+            "sortNum": 60000,
+            "created": "2024-07-10T19:37:36.120Z",
+            "modified": "2024-07-10T19:38:13.512Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
