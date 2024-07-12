@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dao.PedidoRepository;
+import isi.dan.ms.pedidos.dto.ActualizarStockDTO;
 import isi.dan.ms.pedidos.model.DetallePedido;
 import isi.dan.ms.pedidos.model.Pedido;
 
@@ -25,10 +26,15 @@ public class PedidoService {
 
 
     public Pedido savePedido(Pedido pedido) {
-        for( DetallePedido dp : pedido.getDetalle()){
-            log.info("Enviando {}", dp.getProducto().getId()+";"+dp.getCantidad());
-            rabbitTemplate.convertAndSend(RabbitMQConfig.STOCK_UPDATE_QUEUE, dp.getProducto().getId()+";"+dp.getCantidad());
+        /*
+        ActualizarStockDTO dto = new ActualizarStockDTO();
+        for(DetallePedido dp : pedido.getDetalle()) {
+            dto.setIdProducto(dp.getProducto().getId());
+            dto.setCantidad(dp.getCantidad());
+            log.info("Enviando mensaje de reduccion de stock: " + dto);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.COLA_ACTUALIZACION_STOCK, dto);
         }
+         */
         return pedidoRepository.save(pedido);
     }
 

@@ -1,30 +1,52 @@
 package isi.dan.ms_productos.model;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.validation.constraints.Min;
+
 @Entity
-@Table(name = "ms_productos_producto")
-@Data
+@Table(name = "producto", schema = "ms_productos")
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Producto.class)
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
-    private Long id;
+    private Integer id;
 
     private String nombre;
 
     private String descripcion;
 
     @Column(name ="stock_actual")
-    private int stockActual;
+    @Min(value = 0, message = "El stock actual debe ser mayor o igual que 0")
+    private Integer stockActual = 0;
 
     @Column(name ="stock_minimo")
-    private int stockMinimo;
+    @Min(value = 0, message = "El stock minimo debe ser mayor o igual que 0")
+    private Integer stockMinimo = 0;
 
     private BigDecimal precio;
+
+    private BigDecimal descuentoPromocional = new BigDecimal(0.0);
     
-    @Enumerated(EnumType.STRING)
+    @OneToOne
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
+    /*
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(64)")
+    private Categoria categoria;
+    */
 }
