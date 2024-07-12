@@ -23,6 +23,7 @@
 hs_err_pid*
 replay_pid*
 
-# IDE
-.vscode
-.idea
+# IntelliJ & vscode config files
+.idea/
+.vscode/
+
