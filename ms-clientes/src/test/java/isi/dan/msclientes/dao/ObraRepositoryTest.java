@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
@@ -37,8 +38,8 @@ import static org.junit.Assert.assertTrue;
 */
 
 @ActiveProfiles("db") // Usar application-db.properties
-@DataJpaTest // Usar solo componentes de JPA
-//@SpringBootTest
+//@DataJpaTest // Usar solo componentes de JPA
+@SpringBootTest // Carga todo el "application context". Hace funcionar mvn test, necesario para jacoco
 @Testcontainers // Usar db de prueba dentro de container docker
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Desactivar db H2 que usa springboot por defecto
 public class ObraRepositoryTest {
@@ -92,8 +93,8 @@ public class ObraRepositoryTest {
 
     @Test
     void saveFindByIdAndDelete() {
-        obra1 = obraRepository.save(obra1);
-        Obra obra1Db = obraRepository.findById(obra1.getId()).get();
+        Obra obra1Db = obraRepository.save(obra1);
+        obra1.setId(obra1Db.getId());
         
         log.info("Obra: " + obra1.toString());
         log.info("Obra DB: " + obra1Db.toString());
