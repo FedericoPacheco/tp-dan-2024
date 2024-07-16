@@ -18,12 +18,12 @@ public class DescuentosPromocionalesController {
     private ProductoService productoService;
 
     @PutMapping("/{idProducto}")
-    public ResponseEntity<Producto> update(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
+    public ResponseEntity<Void> update(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
         Optional<Producto> optionalProducto = productoService.findById(idProducto);
         if (optionalProducto.isPresent()) {
             optionalProducto.get().setDescuentoPromocional(descuento);
             productoService.update(optionalProducto.get());
-            return ResponseEntity.ok(optionalProducto.get());
+            return ResponseEntity.noContent().build();  
         }
         else return ResponseEntity.notFound().build(); 
     }

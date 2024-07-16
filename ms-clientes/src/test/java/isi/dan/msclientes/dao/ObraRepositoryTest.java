@@ -48,8 +48,8 @@ public class ObraRepositoryTest {
 
     @Container
     @ServiceConnection
-    //public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine");
-    public static MySQLContainer<?> container = new MySQLContainer<>("mysql:latest");
+    //private static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine");
+    private static MySQLContainer<?> container = new MySQLContainer<>("mysql:latest");
 
     @Autowired
     private ObraRepository obraRepository;

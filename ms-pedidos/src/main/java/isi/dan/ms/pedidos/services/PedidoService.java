@@ -1,13 +1,9 @@
 package isi.dan.ms.pedidos.services;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dao.PedidoRepository;
-import isi.dan.ms.pedidos.dto.ActualizarStockDTO;
-import isi.dan.ms.pedidos.model.DetallePedido;
 import isi.dan.ms.pedidos.model.Pedido;
 
 import java.util.List;
@@ -19,8 +15,8 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    //@Autowired
+    //private RabbitTemplate rabbitTemplate;
 
     Logger log = LoggerFactory.getLogger(PedidoService.class);
 

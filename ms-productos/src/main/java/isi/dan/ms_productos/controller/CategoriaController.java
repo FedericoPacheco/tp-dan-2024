@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/productos")
+@RequestMapping("/api/categorias")
 public class CategoriaController {
 
     @Autowired
     private CategoriaService categoriaService;
 
     @PostMapping
-    public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria producto) {
-        return ResponseEntity.ok(categoriaService.save(producto));
+    public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria) {
+        return ResponseEntity.ok(categoriaService.save(categoria));
     }
 
     @GetMapping
@@ -38,11 +38,11 @@ public class CategoriaController {
     }
 
     @PutMapping
-    public ResponseEntity<Categoria> update(@Valid @RequestBody Categoria producto) {
-        Optional<Categoria> optionalCategoria = categoriaService.findById(producto.getId());
+    public ResponseEntity<Categoria> update(@Valid @RequestBody Categoria categoria) {
+        Optional<Categoria> optionalCategoria = categoriaService.findById(categoria.getId());
         if (optionalCategoria.isPresent()) {
-            categoriaService.update(producto);
-            return ResponseEntity.ok(producto);
+            categoriaService.update(categoria);
+            return ResponseEntity.ok(categoria);
         }
         else return ResponseEntity.notFound().build();    
     }

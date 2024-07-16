@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -41,7 +40,7 @@ public class Producto {
 
     private BigDecimal descuentoPromocional = new BigDecimal(0.0);
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
     /*
@@ -49,4 +48,11 @@ public class Producto {
     @Column(columnDefinition = "VARCHAR(64)")
     private Categoria categoria;
     */
+
+    @Override
+    public String toString() {
+        return "Producto [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", stockActual="
+                + stockActual + ", stockMinimo=" + stockMinimo + ", precio=" + precio + ", descuentoPromocional="
+                + descuentoPromocional + ", categoria=" + categoria + "]";
+    }
 }

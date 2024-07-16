@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import isi.dan.ms_productos.conf.RabbitMQConfig;
 import isi.dan.ms_productos.dao.ProductoRepository;
-import isi.dan.ms_productos.dto.ActualizarStockDTO;
+import isi.dan.ms_productos.dto.OrdenCompraDTO;
+import isi.dan.ms_productos.dto.OrdenProvisionDTO;
 import isi.dan.ms_productos.model.Producto;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,41 +23,42 @@ public class ProductoService {
 
     Logger log = LoggerFactory.getLogger(ProductoService.class);
 
-    @RabbitListener(queues = RabbitMQConfig.COLA_ACTUALIZACION_STOCK)
-    public void gestionarReducirStock(ActualizarStockDTO dto) {
+    @RabbitListener(queues = RabbitMQConfig.ORDENES_COMPRA_QUEUE)
+    public void gestionarReducirStock(OrdenCompraDTO dto) {
         log.info("Reducir stock: " + dto);
         this.reducirStock(dto);
     }
 
 
-    public void incrementarStock(ActualizarStockDTO dto, BigDecimal precio) {
-        Optional<Producto> optionalProducto = this.actualizarStock(dto, 1, false);
-        if (optionalProducto.isPresent()) {
-            optionalProducto.get().setPrecio(precio);
-            productoRepository.save(optionalProducto.get());
-        }
-    }
-
-    public void reducirStock(ActualizarStockDTO dto) {
-        this.actualizarStock(dto, -1, true);
-    }
-
-    private Optional<Producto> actualizarStock(ActualizarStockDTO dto, Integer signo, Boolean persistir)
-    {
-        Optional<Producto> optionalProducto = productoRepository.findById(dto.getIdProducto());
+    public void incrementarStock(OrdenProvisionDTO dto) {
+        Optional<Producto> optionalProducto = this.findById(dto.getIdProducto());
         if (optionalProducto.isPresent()) {
             optionalProducto.get().setStockActual(
                 Math.max(
-                    optionalProducto.get().getStockActual() + signo * Math.abs(dto.getCantidad()), 
-                    0
+                    optionalProducto.get().getStockActual() + Math.abs(dto.getCantidad()), 
+                    optionalProducto.get().getStockMinimo()
+                    // 0 
                 )
             );
-            if (persistir) 
-                productoRepository.save(optionalProducto.get());
+            optionalProducto.get().setPrecio(dto.getPrecio());
+            this.update(optionalProducto.get());
         }
-        return optionalProducto;
     }
 
+    public void reducirStock(OrdenCompraDTO dto) {
+        Optional<Producto> optionalProducto = this.findById(dto.getIdProducto());
+        if (optionalProducto.isPresent()) {
+
+            optionalProducto.get().setStockActual(
+                Math.max(
+                    optionalProducto.get().getStockActual() - Math.abs(dto.getCantidad()), 
+                    optionalProducto.get().getStockMinimo()
+                    // 0 
+                )
+            );
+            this.update(optionalProducto.get());
+        }
+    }
 
     public Producto save(Producto producto) {
         return productoRepository.save(producto);

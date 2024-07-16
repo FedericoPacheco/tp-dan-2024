@@ -1,5 +1,8 @@
 package isi.dan.ms_productos.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -8,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "producto", schema = "ms_productos")
+@Table(name = "categoria", schema = "ms_productos")
 //@Data
 @Getter
 @Setter
@@ -29,6 +33,14 @@ public class Categoria {
     private Integer id;
 
     private String nombre;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Producto> productos = new LinkedList<>();
+
+    @Override
+    public String toString() {
+        return "Categoria [id=" + id + ", nombre=" + nombre + "]";
+    }
 }
 
 
