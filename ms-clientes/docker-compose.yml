@@ -5,7 +5,7 @@
 # docker-compose -f ./ms-clientes/docker-compose.yml up --build -d
 
 # Troubleshooting
-# Comandos: docker builder prune -a (limpiar cache imagenes), docker network prune (limpiar redes viejas)
+# Comandos: docker image prune -a / docker builder prune -a (limpiar cache imagenes), docker network prune (limpiar redes viejas)
 # Asegurarse que Dockerfile y docker-compose tengan "LF" (line feed, linux) y no "CR LF" (carriage return line feed, windows)
 # Asegurarse que la arquitectura de la imagen soporte la misma que la de la compu: amd64 -> x86/64, arm64
 # No olvidarse de ejecutar Docker desktop

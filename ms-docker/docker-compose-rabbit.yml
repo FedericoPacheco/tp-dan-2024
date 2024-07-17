@@ -1,3 +1,9 @@
+# Crear red
+# docker network create backend-net
+
+# Armar todo y correr
+# docker-compose -f ./ms-docker/docker-compose-rabbit.yml up -d 
+
 version: '3.8'
 
 services:

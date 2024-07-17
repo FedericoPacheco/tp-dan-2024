@@ -1,3 +1,9 @@
+# Crear red
+# docker network create backend-net
+
+# Armar todo y correr
+# docker-compose -f ./ms-productos/docker-compose.yml up --build -d
+
 version: '3.8'
 
 services:
@@ -17,6 +23,9 @@ services:
     networks:
       - productos-net
 
+  # Acceder desde el navegador: http://localhost:8032/ colocando las credenciales de pgadmin.
+  # Luego registrar el servidor, poniendo como host "pg-dan" (NO "localhost") y el resto 
+  # de credenciales de la db 
   pgadmin-dan:
     image: dpage/pgadmin4:latest
     container_name: pgadmin-container
