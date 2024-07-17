@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.AfterAll;
@@ -125,7 +124,6 @@ class MsProductosApplicationTests {
 			   .andExpect(status().isOk())
 			   .andExpect(jsonPath("$.nombre").value(categoria.getNombre()));
 			   
-		producto.setCategoria(categoria); 
 		// Guardar producto
 		mockMvc.perform(post("/api/productos")
 			   .contentType(MediaType.APPLICATION_JSON)
@@ -133,13 +131,15 @@ class MsProductosApplicationTests {
 			   .andExpect(status().isOk())
 			   .andExpect(jsonPath("$.nombre").value(producto.getNombre()));
 
-		// Adicional: verificar que haya solo una categoria guardada
-		mockMvc.perform(get("/api/categorias"))
+		// Asignar producto a categoria
+		producto.setCategoria(categoria); 
+		mockMvc.perform(put("/api/productos/" + producto.getId() + "/categoria/" + categoria.getId())
+			   .contentType(MediaType.APPLICATION_JSON))
 			   .andExpect(status().isOk())
-		       .andExpect(jsonPath("$", hasSize(1)));
+			   .andExpect(jsonPath("$.categoria.id").value(categoria.getId()));
 
 		// Incrementar stock por orden de provision
-		mockMvc.perform(put("/api/ordenes-provision")
+		mockMvc.perform(put("/api/ordenes/provision")
 			   .contentType(MediaType.APPLICATION_JSON)
 			   .content(asJsonString(ordenProvisionDTO))) 
 			   .andExpect(status().isNoContent());
@@ -150,8 +150,7 @@ class MsProductosApplicationTests {
 
 		// Cambiar descuento promocional
 		producto.setDescuentoPromocional(BigDecimal.valueOf(0.1));
-
-		mockMvc.perform(put("/api/descuentos-promocionales/" + producto.getId())
+		mockMvc.perform(put("/api/productos/" + producto.getId() + "/descuento-promocional")
 			   .contentType(MediaType.APPLICATION_JSON)
 			   .content(asJsonString(producto.getDescuentoPromocional()))) 
 			   .andExpect(status().isNoContent());
@@ -168,7 +167,7 @@ class MsProductosApplicationTests {
 		   su respuesta que lo que el mensaje de rabbit es recibido, procesado, reenviado y procesado
 		   por ProductoService; y esto hace el test falle.
 		*/
-		Thread.sleep(5000); 
+		Thread.sleep(2500); 
 		mockMvc.perform(get("/api/productos/" + producto.getId()))
 			   .andExpect(status().isOk())
 			   .andExpect(jsonPath("$.stockActual").value(producto.getStockActual() + ordenProvisionDTO.getCantidad() - ordenCompraDTO.getCantidad()));

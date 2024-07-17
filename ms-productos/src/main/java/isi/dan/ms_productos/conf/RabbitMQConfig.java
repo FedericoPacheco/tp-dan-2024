@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    // Video RabbitMQ + test containers: https://www.youtube.com/watch?v=9jZInwFtp44
+
     public static final String ORDENES_COMPRA_QUEUE = "cola-ordenes-compra";
     public static final String ORDENES_COMPRA_ROUTING_KEY = "orden.compra";
     public static final String ORDENES_COMPRA_EXCHANGE = "OrdenesCompraExchange";

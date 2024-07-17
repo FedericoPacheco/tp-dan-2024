@@ -34,8 +34,14 @@
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 		<dependency>
+		<!-- Nota: mucho cuidado con repetir dependencias, sobretodo con distintas versiones, produce errores extraños.
+			En este caso el container no encontraba del driver de postgres. Antes de hacer docker-compose ... 
+			probar: mvn clean package -DskipTests y fijarse que no haya ninguna salida extraña.
+			Referencia: https://brainly.com/question/34183015
+		-->
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -86,11 +92,13 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+		<!--
 		<dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>test</scope>
-        </dependency> 
+			<scope>test</scope>
+        </dependency>
+		--> 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
