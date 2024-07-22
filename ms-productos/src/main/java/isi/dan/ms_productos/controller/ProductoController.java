@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -79,7 +80,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{idProducto}/descuento-promocional")
-    public ResponseEntity<Void> update(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
+    public ResponseEntity<Void> updateDescuentoPromociona(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
         Optional<Producto> optionalProducto = productoService.findById(idProducto);
         if (optionalProducto.isPresent()) {
             optionalProducto.get().setDescuentoPromocional(descuento);
@@ -88,5 +89,36 @@ public class ProductoController {
         }
         else return ResponseEntity.notFound().build(); 
     }
+
+    @GetMapping("/{idProducto}/descuento-promocional")
+    public ResponseEntity<BigDecimal> getDescuentoPromocional(@PathVariable Integer idProducto) {
+        Optional<Producto> optionalProducto = productoService.findById(idProducto);
+        if (optionalProducto.isPresent()) {
+            return ResponseEntity.ok(optionalProducto.get().getDescuentoPromocional());  
+        }
+        else return ResponseEntity.notFound().build(); 
+    }
+
+    @GetMapping("/{idProducto}/precio")
+    public ResponseEntity<BigDecimal> getPrecio(@PathVariable Integer idProducto) {
+        Optional<Producto> optionalProducto = productoService.findById(idProducto);
+        if (optionalProducto.isPresent()) {
+            return ResponseEntity.ok(optionalProducto.get().getPrecio());  
+        }
+        else return ResponseEntity.notFound().build(); 
+    }
+
+    /* 
+    @GetMapping("/precio-final/{id}")
+    public ResponseEntity<BigDecimal> getPrecioFinal(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(productoService.getPrecioFinal(id));    
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    */
+
+
 }
 
