@@ -1,9 +1,5 @@
 package isi.dan.ms_productos.conf;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -18,10 +14,13 @@ public class RabbitMQConfig {
 
     public static final String ORDENES_COMPRA_QUEUE = "cola-ordenes-compra";
     public static final String ORDENES_COMPRA_ROUTING_KEY = "orden.compra";
-    public static final String ORDENES_COMPRA_EXCHANGE = "OrdenesCompraExchange";
+    public static final String ORDENES_PROVISION_QUEUE = "cola-ordenes-provision";
+    public static final String ORDENES_PROVISION_ROUTING_KEY = "orden.provision";
+    public static final String ORDENES_EXCHANGE = "OrdenesExchange";
 
     //Logger log = LoggerFactory.getLogger(RabbitMQConfig.class);
 
+    /* 
     // Cola de ordenes de compra
     @Bean
     public Queue ordenesCompraQueue() {
@@ -31,7 +30,7 @@ public class RabbitMQConfig {
     // Agente/broker que se encarga de distribuir los mensajes en las colas
     @Bean
     public TopicExchange ordenesCompraExchange() {
-        return new TopicExchange(ORDENES_COMPRA_EXCHANGE);
+        return new TopicExchange(ORDENES_EXCHANGE);
     }
 
     // Relacionar cola con exchange
@@ -39,6 +38,7 @@ public class RabbitMQConfig {
     Binding ordenesCompraQueueBinding(Queue ordenesCompraQueue, TopicExchange ordenesCompraExchange) {
         return BindingBuilder.bind(ordenesCompraQueue).to(ordenesCompraExchange).with(ORDENES_COMPRA_ROUTING_KEY);
     }
+    */
 
     // Usar jackson para serializar y de-serializar los objetos OrdenCompraDTO
     @Bean

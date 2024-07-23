@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -21,6 +20,11 @@ public class HistorialPedido {
 
     public HistorialPedido() {
         this.estado = EstadoPedido.INICIADO;
+        this.fecha = Instant.now();
+    }
+
+    public HistorialPedido(EstadoPedido estado) {
+        this.estado = estado;
         this.fecha = Instant.now();
     }
 }

@@ -161,7 +161,7 @@ class MsProductosApplicationTests {
 		
 		// Reducir stock por orden de compra
 		assertDoesNotThrow(
-			() -> rabbitTemplate.convertAndSend(RabbitMQConfig.ORDENES_COMPRA_EXCHANGE, RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, ordenCompraDTO));
+			() -> rabbitTemplate.convertAndSend(RabbitMQConfig.ORDENES_EXCHANGE, RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, ordenCompraDTO));
 
 		/* Esperar un poco para pegarle a la API. Si no ProductoController retorna más rapido
 		   su respuesta que lo que el mensaje de rabbit es recibido, procesado, reenviado y procesado

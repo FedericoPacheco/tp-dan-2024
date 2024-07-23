@@ -14,7 +14,6 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Document(collection = "pedidos")
@@ -65,6 +64,10 @@ public class Pedido {
 
     public EstadoPedido getEstado() {
         return this.historialEstados.getLast().getEstado();
+    }
+
+    public void setEstado(EstadoPedido estado) {
+        this.historialEstados.add(new HistorialPedido(estado));
     }
 }
 
