@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -43,7 +44,7 @@ public class PedidoServiceTest {
     
     List<Pedido> pedidosViejos;
     PedidoDTO pedidoNuevoDTO;
-    Pedido pedidoNuevo;
+    Pedido pedidoNuevoIncompleto;
     List<ProductoDTO> productos;
     ClienteDTO cliente;
 
@@ -111,11 +112,10 @@ public class PedidoServiceTest {
         cliente = new ClienteDTO(1, "DAN construcciones", BigDecimal.valueOf(550));
         Mockito.when(restTemplate.getForObject(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente(), ClienteDTO.class)).thenReturn(cliente);
     
-        Mockito.when(pedidoRepository.save(any(Pedido.class))).thenReturn(new Pedido(pedidoNuevoDTO)); // No debe considerarse ese pedido, pero no puede usarse doNothing()
+        pedidoNuevoIncompleto = new Pedido(pedidoNuevoDTO);
+        Mockito.when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedidoNuevoIncompleto); // No debe considerarse ese pedido, pero no puede usarse doNothing()
         Mockito.when(pedidoRepository.findByIdCliente(1)).thenReturn(pedidosViejos);
-    
-        pedidoNuevo = pedidoService.save(pedidoNuevoDTO);
-        Mockito.when(pedidoRepository.findById(anyString())).thenReturn(Optional.of(pedidoNuevo));
+        Mockito.when(pedidoRepository.findById(anyString())).thenReturn(Optional.of(pedidoNuevoIncompleto));
     }
 
     @Test
@@ -168,6 +168,7 @@ public class PedidoServiceTest {
             eq(RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY), 
             any(OrdenCompraDTO.class)
         )).thenReturn(false);
+        pedidoNuevoIncompleto.setEstado(EstadoPedido.EN_PREPARACION);
         
         pedidoService.actualizarEstado("idPedido", EstadoPedido.CANCELADO);
         verify(pedidoRepository, times(1)).save(any(Pedido.class));
@@ -175,19 +176,33 @@ public class PedidoServiceTest {
 
     @Test
     public void actualizarEstadoEntregado() {
+        pedidoNuevoIncompleto.setEstado(EstadoPedido.EN_PREPARACION);
         pedidoService.actualizarEstado("idPedido", EstadoPedido.ENTREGADO);
         verify(pedidoRepository, times(1)).save(any(Pedido.class));
     }
 
-    // TODO: ver porqué falla
-    /* 
     @Test
-    public void actualizarEstadoInvalido() {
+    public void actualizarEstadoIiniciado() {
         pedidoService.actualizarEstado("idPedido", EstadoPedido.INICIADO);
-        pedidoService.actualizarEstado("idPedido", EstadoPedido.RECIBIDO);
-        pedidoService.actualizarEstado("idPedido", EstadoPedido.ACEPTADO);
-        pedidoService.actualizarEstado("idPedido", EstadoPedido.RECHAZADO);
-        verify(pedidoRepository, times(0)).save(any(Pedido.class));
+        verify(pedidoRepository, never()).save(any(Pedido.class));
     }
-    */
+
+    @Test
+    public void actualizarEstadoRecibido() {
+        pedidoService.actualizarEstado("idPedido", EstadoPedido.RECIBIDO);
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void actualizarEstadoAceptado() {
+        pedidoService.actualizarEstado("idPedido", EstadoPedido.ACEPTADO);
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
+    @Test
+    public void actualizarEstadoRechazado() {
+        pedidoService.actualizarEstado("idPedido", EstadoPedido.RECHAZADO);
+        verify(pedidoRepository, never()).save(any(Pedido.class));
+    }
+
 }
