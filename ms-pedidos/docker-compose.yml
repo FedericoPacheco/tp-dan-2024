@@ -1,7 +1,7 @@
 version: '3.8'
 
 # Armar todo y correr
-# docker-compose -f ./ms-clientes/docker-compose.yml up --build -d
+# docker-compose -f ./ms-pedidos/docker-compose.yml up --build -d
 
 services:
 

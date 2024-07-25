@@ -21,4 +21,11 @@ public class PedidoDTO {
     private Integer idUsuario;
     private String observaciones;
     List<OrdenCompraDTO> productos = new LinkedList<>();
+
+    public PedidoDTO(Integer idCliente, Integer idObra, Integer idUsuario, String observaciones) {
+        this.idCliente = idCliente;
+        this.idObra = idObra;
+        this.idUsuario = idUsuario;
+        this.observaciones = observaciones;
+    }
 }

@@ -8,9 +8,10 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@TestConfiguration(proxyBeanMethods = false)
+//@TestConfiguration(proxyBeanMethods = false)
 public class TestMsPedidosApplication {
 
+	/* 
 	@Bean
 	@ServiceConnection
 	MongoDBContainer mongoDbContainer() {
@@ -22,9 +23,11 @@ public class TestMsPedidosApplication {
 	RabbitMQContainer rabbitContainer() {
 		return new RabbitMQContainer(DockerImageName.parse("rabbitmq:latest"));
 	}
+	
 
 	public static void main(String[] args) {
 		SpringApplication.from(MsPedidosApplication::main).with(TestMsPedidosApplication.class).run(args);
 	}
 
+	*/
 }

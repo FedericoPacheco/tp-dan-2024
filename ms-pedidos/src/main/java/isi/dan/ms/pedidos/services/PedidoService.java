@@ -10,14 +10,14 @@ import org.springframework.web.client.RestTemplate;
 
 import isi.dan.ms.pedidos.conf.RabbitMQConfig;
 import isi.dan.ms.pedidos.dao.PedidoRepository;
+import isi.dan.ms.pedidos.dto.ClienteDTO;
 import isi.dan.ms.pedidos.dto.OrdenCompraDTO;
 import isi.dan.ms.pedidos.dto.OrdenProvisionDTO;
 import isi.dan.ms.pedidos.dto.PedidoDTO;
-import isi.dan.ms.pedidos.model.Cliente;
+import isi.dan.ms.pedidos.dto.ProductoDTO;
 import isi.dan.ms.pedidos.model.DetallePedido;
 import isi.dan.ms.pedidos.model.EstadoPedido;
 import isi.dan.ms.pedidos.model.Pedido;
-import isi.dan.ms.pedidos.model.Producto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 public class PedidoService {
     
     // No estoy seguro si esto está bien
-    private static String URL_PRODUCTOS = "http://ms-productos-svc:6180/api/productos/";
-    private static String URL_CLIENTES = "http://ms-clientes-svc:6080/api/clientes/";
+    public static String URL_PRODUCTOS = "http://ms-productos-svc:6180/api/productos/";
+    public static String URL_CLIENTES = "http://ms-clientes-svc:6080/api/clientes/";
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -39,16 +39,10 @@ public class PedidoService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    RestTemplate restTemplate;
-    HttpHeaders header;
-    Logger log;
-
-    public PedidoService() {
-        restTemplate = new RestTemplate();
-        header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        log = LoggerFactory.getLogger(PedidoService.class);
-    }
+    @Autowired
+    RestTemplate restTemplate;// = new RestTemplate();
+    
+    Logger log = LoggerFactory.getLogger(PedidoService.class);
     
     // TODO: validar que usuario y obra pertenecen al cliente
     @SuppressWarnings("null")
@@ -56,10 +50,10 @@ public class PedidoService {
     
         Pedido pedido = calcularTotalPedido(dto);
         try {
-            Cliente cliente = restTemplate.getForObject(URL_CLIENTES + pedido.getIdCliente(), Cliente.class);
+            ClienteDTO cliente = restTemplate.getForObject(URL_CLIENTES + pedido.getIdCliente(), ClienteDTO.class);
             
             // Evaluar si el monto del cliente supera el máximo descubierto
-            if (this.calcularMontoCliente(pedido).compareTo(cliente.getMaximoDescubierto()) != -1)
+            if (this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()).compareTo(cliente.getMaximoDescubierto()) > 0)
                 pedido.setEstado(EstadoPedido.RECHAZADO);  
             else {
                 pedido.setEstado(EstadoPedido.ACEPTADO); 
@@ -69,11 +63,12 @@ public class PedidoService {
                 else
                     pedido.setEstado(EstadoPedido.ACEPTADO);
             } 
-        } catch (HttpClientErrorException e) {
+        } catch (Exception e) {
             pedido.setEstado(EstadoPedido.RECIBIDO);    
         }
-        
-        return pedidoRepository.save(pedido);
+        pedidoRepository.save(pedido);
+
+        return pedido;
     }
 
     @SuppressWarnings("null")
@@ -85,7 +80,7 @@ public class PedidoService {
         for (DetallePedido detalle : pedido.getDetalles()) {
             try {
                 // Llamar a ms-productos
-                Producto producto = restTemplate.getForObject(URL_PRODUCTOS + detalle.getIdProducto(), Producto.class);
+                ProductoDTO producto = restTemplate.getForObject(URL_PRODUCTOS + detalle.getIdProducto(), ProductoDTO.class);
                 detalle.setPrecioUnitario(producto.getPrecio());
                 detalle.setDescuento(producto.getDescuentoPromocional());
                 /* 
@@ -98,7 +93,11 @@ public class PedidoService {
             catch (HttpClientErrorException e) {
                 detallesInvalidos.add(detalle);
             }
-            detalle.setPrecioTotal(detalle.getPrecioUnitario().multiply(detalle.getDescuento()));
+            detalle.setPrecioTotal(
+                BigDecimal.valueOf(detalle.getCantidad()).multiply(
+                    detalle.getPrecioUnitario()).multiply(
+                        BigDecimal.ONE.subtract(detalle.getDescuento()))
+            );
             pedido.setTotal(pedido.getTotal().add(detalle.getPrecioTotal()));
         }
         // Remover productos que no existen de los detalles        
@@ -107,12 +106,13 @@ public class PedidoService {
         return pedido;
     }
 
-    private BigDecimal calcularMontoCliente(Pedido pedido) {
-        List<Pedido> pedidosPrevios = pedidoRepository.findByIdCliente(pedido.getIdCliente());
+    private BigDecimal calcularMontoCliente(Integer idCliente, BigDecimal totalPedidoActual) {
+        List<Pedido> pedidosPrevios = pedidoRepository.findByIdCliente(idCliente);
         return pedidosPrevios.stream()
+                             .filter(p -> p.getEstado().equals(EstadoPedido.EN_PREPARACION) || p.getEstado().equals(EstadoPedido.ACEPTADO))
                              .map(p -> p.getTotal())
                              .reduce(BigDecimal.ZERO, BigDecimal::add)
-                             .add(pedido.getTotal());
+                             .add(totalPedidoActual);
     }
 
     private Boolean actualizarStockProductos(Pedido pedido) {
