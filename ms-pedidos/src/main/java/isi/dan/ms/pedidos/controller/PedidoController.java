@@ -4,10 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import isi.dan.ms.pedidos.dto.PedidoDTO;
+import isi.dan.ms.pedidos.model.EstadoPedido;
 import isi.dan.ms.pedidos.model.Pedido;
-import isi.dan.ms.pedidos.services.PedidoService;
-import jakarta.validation.Valid;
-
+import isi.dan.ms.pedidos.service.PedidoService;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +27,10 @@ public class PedidoController {
         return pedidoService.findAll();
     }
 
-    @PutMapping
-    public ResponseEntity<Pedido> update(@Valid @RequestBody Pedido pedido) {
-        Optional<Pedido> optionalPedido = pedidoService.findById(pedido.getId());
-        if (optionalPedido.isPresent()) {
-            pedidoService.update(pedido);
-            return ResponseEntity.ok(pedido);
-        }
-        else return ResponseEntity.notFound().build();    
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> actualizarEstado(@PathVariable String id, @RequestBody EstadoPedido estado) {
+        pedidoService.actualizarEstado(id, estado);
+        return ResponseEntity.noContent().build();    
     }
 
     @GetMapping("/{id}")
@@ -45,6 +40,11 @@ public class PedidoController {
             return ResponseEntity.ok(optionalPedido.get());
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/cliente/{id}")
+    public ResponseEntity<List<Pedido>> findByIdCliente(@PathVariable Integer id) {
+        return ResponseEntity.ok(pedidoService.findByIdCliente(id));
     }
 
     @DeleteMapping("/{id}")

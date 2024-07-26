@@ -57,7 +57,7 @@ class MsProductosApplicationTests {
 	/* Se usa este metodo porque @ServiceConnection no setea correctamente los parámetros por algún motivo,
 	 y luego el @Bean de ConnectionFactory de rabbitTemplate falla.
 	*/
-	 @DynamicPropertySource
+	@DynamicPropertySource
 	static void registerRabbitMQProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.rabbitmq.host", rabbitMQContainer::getHost);
 		registry.add("spring.rabbitmq.port", rabbitMQContainer::getAmqpPort);

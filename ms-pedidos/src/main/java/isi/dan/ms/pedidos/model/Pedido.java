@@ -36,6 +36,7 @@ public class Pedido {
     
     @Field("historial_estados")
     private List<HistorialPedido> historialEstados;
+    private EstadoPedido estado;
     private List<DetallePedido> detalles;
 
     // private Cliente cliente;
@@ -51,7 +52,7 @@ public class Pedido {
         this.fecha = Instant.now();
         this.total = BigDecimal.valueOf(0);
         this.historialEstados = new ArrayList<>();
-        this.historialEstados.add(new HistorialPedido());
+        this.setEstado(EstadoPedido.INICIADO);
         
         this.detalles = new ArrayList<>();
         for (OrdenCompraDTO ordenCompra : dto.getProductos()) {
@@ -63,11 +64,13 @@ public class Pedido {
     }
 
     public EstadoPedido getEstado() {
-        return this.historialEstados.getLast().getEstado();
+        return this.estado;
+        //return this.historialEstados.getLast().getEstado();
     }
 
     public void setEstado(EstadoPedido estado) {
         this.historialEstados.add(new HistorialPedido(estado));
+        this.estado = estado;
     }
 }
 

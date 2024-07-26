@@ -18,11 +18,6 @@ public class HistorialPedido {
     String detalle;
     // No sé qué es el "userEstado" que menciona el enunciado
 
-    public HistorialPedido() {
-        this.estado = EstadoPedido.INICIADO;
-        this.fecha = Instant.now();
-    }
-
     public HistorialPedido(EstadoPedido estado) {
         this.estado = estado;
         this.fecha = Instant.now();

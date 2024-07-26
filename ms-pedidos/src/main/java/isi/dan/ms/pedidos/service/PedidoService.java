@@ -1,9 +1,7 @@
-package isi.dan.ms.pedidos.services;
+package isi.dan.ms.pedidos.service;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -44,7 +42,7 @@ public class PedidoService {
     
     Logger log = LoggerFactory.getLogger(PedidoService.class);
     
-    // TODO: validar que usuario y obra pertenecen al cliente
+    // TODO: validar que usuario y obra pertenecen al cliente?
     @SuppressWarnings("null")
     public Pedido save(PedidoDTO dto) {
     
@@ -52,13 +50,18 @@ public class PedidoService {
         try {
             ClienteDTO cliente = restTemplate.getForObject(URL_CLIENTES + pedido.getIdCliente(), ClienteDTO.class);
             
+            log.info("cliente: " + cliente);
+            log.info("this.calcularMontoCliente(): " + this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()));
+
             // Evaluar si el monto del cliente supera el máximo descubierto
             if (this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()).compareTo(cliente.getMaximoDescubierto()) > 0)
                 pedido.setEstado(EstadoPedido.RECHAZADO);  
             else {
                 pedido.setEstado(EstadoPedido.ACEPTADO); 
                 
-                if (actualizarStockProductos(pedido))
+                Boolean aux = actualizarStockProductos(pedido);
+                log.info("actualizarStockProductos(): " + aux); 
+                if (aux)
                     pedido.setEstado(EstadoPedido.EN_PREPARACION);
                 else
                     pedido.setEstado(EstadoPedido.ACEPTADO);
@@ -126,7 +129,7 @@ public class PedidoService {
                     4. El remitente queda a la espera de la respuesta del consumidor
                 No se usa REST como dice el enunciado porque contradeciría la cola que se implementó en ms-productos
             */
-            operacionExitosa = (Boolean) rabbitTemplate.convertSendAndReceive(
+            operacionExitosa = (Boolean) rabbitTemplate.convertSendAndReceive( // Sincrono
                 RabbitMQConfig.ORDENES_EXCHANGE, 
                 RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, 
                 new OrdenCompraDTO(detalle.getIdProducto(), detalle.getCantidad())
@@ -148,11 +151,11 @@ public class PedidoService {
                     pedido.getEstado().equals(EstadoPedido.EN_PREPARACION)
                 ) {
                     pedido.setEstado(nuevoEstado);
-                    pedidoRepository.save(pedido);
+                    this.update(pedido);
 
                     // Aumentar el stock que se descontó anteriormente
                     for (DetallePedido detalle: pedido.getDetalles()) {
-                        rabbitTemplate.convertAndSend(
+                        rabbitTemplate.convertAndSend(  // Asincrono
                             RabbitMQConfig.ORDENES_EXCHANGE, 
                             RabbitMQConfig.ORDENES_PROVISION_ROUTING_KEY, 
                             new OrdenProvisionDTO(detalle.getIdProducto(), detalle.getCantidad(), null)
@@ -163,7 +166,7 @@ public class PedidoService {
             else if (nuevoEstado.equals(EstadoPedido.ENTREGADO))
                 if (pedido.getEstado().equals(EstadoPedido.EN_PREPARACION)) {
                     pedido.setEstado(nuevoEstado);
-                    pedidoRepository.save(pedido);
+                    this.update(pedido);
                 }
         }
     }
@@ -180,6 +183,10 @@ public class PedidoService {
 
     public Optional<Pedido> findById(String id) {
         return pedidoRepository.findById(id);
+    }
+
+    public List<Pedido> findByIdCliente(Integer idCliente) {
+        return pedidoRepository.findByIdCliente(idCliente);
     }
 
     public void deleteById(String id) {

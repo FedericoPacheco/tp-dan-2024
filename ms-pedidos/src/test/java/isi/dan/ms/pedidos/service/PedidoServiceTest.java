@@ -34,7 +34,6 @@ import isi.dan.ms.pedidos.dto.PedidoDTO;
 import isi.dan.ms.pedidos.dto.ProductoDTO;
 import isi.dan.ms.pedidos.model.EstadoPedido;
 import isi.dan.ms.pedidos.model.Pedido;
-import isi.dan.ms.pedidos.services.PedidoService;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -45,7 +44,6 @@ public class PedidoServiceTest {
     List<Pedido> pedidosViejos;
     PedidoDTO pedidoNuevoDTO;
     Pedido pedidoNuevoIncompleto;
-    List<ProductoDTO> productos;
     ClienteDTO cliente;
 
     @Autowired
@@ -77,11 +75,8 @@ public class PedidoServiceTest {
         }
 
         pedidoNuevoDTO = new PedidoDTO(1,1,1,"");
-        productos = new ArrayList<>();
         for (int i = 1; i <= 2; i++) {
             ProductoDTO producto = new ProductoDTO(i,"",BigDecimal.valueOf(50), BigDecimal.valueOf(0));
-            productos.add(producto);
-
             OrdenCompraDTO ordenCompra = new OrdenCompraDTO(i, 1);
             pedidoNuevoDTO.getProductos().add(ordenCompra); 
         
@@ -109,12 +104,12 @@ public class PedidoServiceTest {
             any(OrdenProvisionDTO.class)
         );
 
-        cliente = new ClienteDTO(1, "DAN construcciones", BigDecimal.valueOf(550));
+        cliente = new ClienteDTO(pedidoNuevoDTO.getIdCliente(), "DAN construcciones", BigDecimal.valueOf(550));
         Mockito.when(restTemplate.getForObject(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente(), ClienteDTO.class)).thenReturn(cliente);
     
         pedidoNuevoIncompleto = new Pedido(pedidoNuevoDTO);
         Mockito.when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedidoNuevoIncompleto); // No debe considerarse ese pedido, pero no puede usarse doNothing()
-        Mockito.when(pedidoRepository.findByIdCliente(1)).thenReturn(pedidosViejos);
+        Mockito.when(pedidoRepository.findByIdCliente(pedidoNuevoDTO.getIdCliente())).thenReturn(pedidosViejos);
         Mockito.when(pedidoRepository.findById(anyString())).thenReturn(Optional.of(pedidoNuevoIncompleto));
     }
 
