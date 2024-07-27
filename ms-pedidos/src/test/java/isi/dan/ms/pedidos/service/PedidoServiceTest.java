@@ -80,7 +80,7 @@ public class PedidoServiceTest {
             OrdenCompraDTO ordenCompra = new OrdenCompraDTO(i, 1);
             pedidoNuevoDTO.getProductos().add(ordenCompra); 
         
-            Mockito.when(restTemplate.getForObject(PedidoService.URL_PRODUCTOS + Integer.toString(i), ProductoDTO.class)).thenReturn(producto);
+            Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_PRODUCTOS + Integer.toString(i)), eq(ProductoDTO.class))).thenReturn(producto);
             /* Mockito.when(rabbitTemplate.convertSendAndReceive(
                 RabbitMQConfig.ORDENES_EXCHANGE, 
                 RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, 
@@ -105,7 +105,7 @@ public class PedidoServiceTest {
         );
 
         cliente = new ClienteDTO(pedidoNuevoDTO.getIdCliente(), "DAN construcciones", BigDecimal.valueOf(550));
-        Mockito.when(restTemplate.getForObject(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente(), ClienteDTO.class)).thenReturn(cliente);
+        Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente()), eq(ClienteDTO.class))).thenReturn(cliente);
     
         pedidoNuevoIncompleto = new Pedido(pedidoNuevoDTO);
         Mockito.when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedidoNuevoIncompleto); // No debe considerarse ese pedido, pero no puede usarse doNothing()
@@ -115,7 +115,7 @@ public class PedidoServiceTest {
 
     @Test
     public void peticionClienteFalla() {
-        Mockito.when(restTemplate.getForObject(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente(), ClienteDTO.class)).thenThrow(HttpClientErrorException.class);
+        Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_CLIENTES + pedidoNuevoDTO.getIdCliente()), eq(ClienteDTO.class))).thenThrow(HttpClientErrorException.class);
         assertTrue(pedidoService.save(pedidoNuevoDTO).getEstado().equals(EstadoPedido.RECIBIDO));
     }
 

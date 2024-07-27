@@ -1,5 +1,6 @@
 package isi.dan.ms.pedidos;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -101,12 +102,12 @@ class MsPedidosApplicationTests {
 				)
 			);
 
-            Mockito.when(restTemplate.getForObject(PedidoService.URL_PRODUCTOS + Integer.toString(i), ProductoDTO.class)).thenReturn(producto);
+            Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_PRODUCTOS + Integer.toString(i)), eq(ProductoDTO.class))).thenReturn(producto);
         }
 
 		// Mocks ms-productos
 		cliente = new ClienteDTO(pedidoDTO.getIdCliente(), "DAN construcciones", total);
-        Mockito.when(restTemplate.getForObject(PedidoService.URL_CLIENTES + pedidoDTO.getIdCliente(), ClienteDTO.class)).thenReturn(cliente);
+        Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_CLIENTES + pedidoDTO.getIdCliente()), eq(ClienteDTO.class))).thenReturn(cliente);
 	}
 
 	@RabbitListener(queues = RabbitMQConfig.ORDENES_COMPRA_QUEUE)

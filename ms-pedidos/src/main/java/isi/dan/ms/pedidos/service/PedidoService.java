@@ -38,7 +38,7 @@ public class PedidoService {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    RestTemplate restTemplate;// = new RestTemplate();
+    RestTemplate restTemplate;
     
     Logger log = LoggerFactory.getLogger(PedidoService.class);
     
@@ -50,18 +50,13 @@ public class PedidoService {
         try {
             ClienteDTO cliente = restTemplate.getForObject(URL_CLIENTES + pedido.getIdCliente(), ClienteDTO.class);
             
-            log.info("cliente: " + cliente);
-            log.info("this.calcularMontoCliente(): " + this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()));
-
             // Evaluar si el monto del cliente supera el máximo descubierto
             if (this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()).compareTo(cliente.getMaximoDescubierto()) > 0)
                 pedido.setEstado(EstadoPedido.RECHAZADO);  
             else {
                 pedido.setEstado(EstadoPedido.ACEPTADO); 
                 
-                Boolean aux = actualizarStockProductos(pedido);
-                log.info("actualizarStockProductos(): " + aux); 
-                if (aux)
+                if (actualizarStockProductos(pedido))
                     pedido.setEstado(EstadoPedido.EN_PREPARACION);
                 else
                     pedido.setEstado(EstadoPedido.ACEPTADO);
