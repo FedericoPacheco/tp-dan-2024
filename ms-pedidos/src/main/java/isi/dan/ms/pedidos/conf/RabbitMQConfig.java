@@ -11,43 +11,49 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+
 @Configuration
 public class RabbitMQConfig {
 
     public static final String ORDENES_COMPRA_QUEUE = "cola-ordenes-compra";
     public static final String ORDENES_COMPRA_ROUTING_KEY = "orden.compra";
-    public static final String ORDENES_COMPRA_EXCHANGE = "OrdenesCompraExchange";
+    public static final String ORDENES_PROVISION_QUEUE = "cola-ordenes-provision";
+    public static final String ORDENES_PROVISION_ROUTING_KEY = "orden.provision";
+    public static final String ORDENES_EXCHANGE = "OrdenesExchange";
 
     //Logger log = LoggerFactory.getLogger(RabbitMQConfig.class);
 
-    // Cola de ordenes de compra
     @Bean
     public Queue ordenesCompraQueue() {
         return new Queue(ORDENES_COMPRA_QUEUE, true);
     }
 
-    // Agente/broker que se encarga de distribuir los mensajes en las colas
     @Bean
-    public TopicExchange ordenesCompraExchange() {
-        return new TopicExchange(ORDENES_COMPRA_EXCHANGE);
+    public Queue ordenesProvisionQueue() {
+        return new Queue(ORDENES_PROVISION_QUEUE, true);
     }
 
-    // Relacionar cola con exchange
     @Bean
-    Binding ordenesCompraQueueBinding(Queue ordenesCompraQueue, TopicExchange ordenesCompraExchange) {
-        return BindingBuilder.bind(ordenesCompraQueue).to(ordenesCompraExchange).with(ORDENES_COMPRA_ROUTING_KEY);
+    public TopicExchange ordenesExchange() {
+        return new TopicExchange(ORDENES_EXCHANGE);
     }
 
-    // Usar jackson para serializar y de-serializar los objetos OrdenCompraDTO
+    @Bean
+    Binding ordenesCompraQueueBinding(Queue ordenesCompraQueue, TopicExchange ordenesExchange) {
+        return BindingBuilder.bind(ordenesCompraQueue).to(ordenesExchange).with(ORDENES_COMPRA_ROUTING_KEY);
+    }
+
+    @Bean
+    Binding ordenesProvisionQueueBinding(Queue ordenesProvisionQueue, TopicExchange ordenesExchange) {
+        return BindingBuilder.bind(ordenesProvisionQueue).to(ordenesExchange).with(ORDENES_PROVISION_ROUTING_KEY);
+    }
+  
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-    /* RabbitTemplate: clase que permite enviar (send(), convertAndSend()) 
-    y recibir (receive() y convertSendAndReceive()) mensajes asincrona y sincronamente. 
-    Se le setea a propósito el conversor a json.
-    */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

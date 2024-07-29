@@ -18,29 +18,40 @@ public class RabbitMQConfig {
 
     public static final String ORDENES_COMPRA_QUEUE = "cola-ordenes-compra";
     public static final String ORDENES_COMPRA_ROUTING_KEY = "orden.compra";
-    public static final String ORDENES_COMPRA_EXCHANGE = "OrdenesCompraExchange";
+    public static final String ORDENES_PROVISION_QUEUE = "cola-ordenes-provision";
+    public static final String ORDENES_PROVISION_ROUTING_KEY = "orden.provision";
+    public static final String ORDENES_EXCHANGE = "OrdenesExchange";
 
     //Logger log = LoggerFactory.getLogger(RabbitMQConfig.class);
 
-    // Cola de ordenes de compra
     @Bean
     public Queue ordenesCompraQueue() {
         return new Queue(ORDENES_COMPRA_QUEUE, true);
     }
 
+    @Bean
+    public Queue ordenesProvisionQueue() {
+        return new Queue(ORDENES_PROVISION_QUEUE, true);
+    }
+
     // Agente/broker que se encarga de distribuir los mensajes en las colas
     @Bean
-    public TopicExchange ordenesCompraExchange() {
-        return new TopicExchange(ORDENES_COMPRA_EXCHANGE);
+    public TopicExchange ordenesExchange() {
+        return new TopicExchange(ORDENES_EXCHANGE);
     }
 
-    // Relacionar cola con exchange
+    // Relacionar colas con exchange
     @Bean
-    Binding ordenesCompraQueueBinding(Queue ordenesCompraQueue, TopicExchange ordenesCompraExchange) {
-        return BindingBuilder.bind(ordenesCompraQueue).to(ordenesCompraExchange).with(ORDENES_COMPRA_ROUTING_KEY);
+    Binding ordenesCompraQueueBinding(Queue ordenesCompraQueue, TopicExchange ordenesExchange) {
+        return BindingBuilder.bind(ordenesCompraQueue).to(ordenesExchange).with(ORDENES_COMPRA_ROUTING_KEY);
     }
 
-    // Usar jackson para serializar y de-serializar los objetos OrdenCompraDTO
+    @Bean
+    Binding ordenesProvisionQueueBinding(Queue ordenesProvisionQueue, TopicExchange ordenesExchange) {
+        return BindingBuilder.bind(ordenesProvisionQueue).to(ordenesExchange).with(ORDENES_PROVISION_ROUTING_KEY);
+    }
+  
+    // Usar jackson para serializar y de-serializar los objetos OrdenCompraDTO y OrdenProvisionDTO
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

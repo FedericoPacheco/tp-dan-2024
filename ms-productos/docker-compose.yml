@@ -53,6 +53,9 @@ services:
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      #Eureka
+      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+      SPRING_INSTANCIA: ms-productos-svc
     ports:
       - "6180:8080"
     depends_on:
@@ -60,8 +63,6 @@ services:
     networks:
       - productos-net
       - backend-net
-
-
 networks:
   backend-net:
     external: true

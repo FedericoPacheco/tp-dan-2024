@@ -1,7 +1,7 @@
 version: '3.8'
 
 # Armar todo y correr
-# docker-compose -f ./ms-clientes/docker-compose.yml up --build -d
+# docker-compose -f ./ms-pedidos/docker-compose.yml up --build -d
 
 services:
 
@@ -19,7 +19,8 @@ services:
     networks:
       - pedidos-net
 
-  mongo-express:
+  # Acceder desde el navegador: http://localhost:8027/
+  mongo-express: 
     image: mongo-express
     restart: always
     ports:
@@ -34,12 +35,14 @@ services:
     networks:
       - pedidos-net
 
-  ms-pedidos-svc:
+  svc:
     image: ms-pedidos-svc:latest
-    container_name: ms-pedidos-svc
+    #container_name: ms-pedidos-svc
     build:
       context: .
       dockerfile: Dockerfile
+    deploy:
+      replicas: 2 # Cantidad de instancias
     environment:
       SPRING_DATA_MONGODB_HOST: mongo-dan
       SPRING_DATA_MONGODB_PORT: 27017
@@ -49,8 +52,11 @@ services:
       SPRING_DATA_MONGODB_URL: mongodb://root:dan@mongo-dan:27017/pedidosdb?authSource=admin
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      #Eureka
+      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+      SPRING_INSTANCIA: ms-pedidos-svc
     ports:
-      - "6280:8080"
+      - "6280-6282:8080"
     depends_on:
       - mongo-dan
     networks:
