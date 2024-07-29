@@ -27,9 +27,12 @@ import org.slf4j.LoggerFactory;
 @Service
 public class PedidoService {
     
-    // No estoy seguro si esto está bien
-    public static String URL_PRODUCTOS = "http://ms-productos-svc:8080/api/productos/";
-    public static String URL_CLIENTES = "http://ms-clientes-svc:8080/api/clientes/";
+    // Pre-eureka
+    //public static String URL_PRODUCTOS = "http://ms-productos-svc:8080/api/productos/";
+    //public static String URL_CLIENTES = "http://ms-clientes-svc:8080/api/clientes/";
+
+    public static String URL_PRODUCTOS = "http://ms-productos/api/productos/";
+    public static String URL_CLIENTES = "http://ms-clientes/api/clientes/";
 
     @Autowired
     private PedidoRepository pedidoRepository;

@@ -1,7 +1,11 @@
 version: '3.8'
 
+# Armar todo y correr
+# docker-compose -f ./eureka-srv/docker-compose.yml up --build -d
+
 services:
 
+  # Dashboard para ver servicios registrados: http://localhost:8761/
   ms-eureka-svc:
     image: ms-eureka-svc:latest
     container_name: ms-eureka-svc

@@ -52,7 +52,7 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       #Eureka
       SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
-      SPRING_INSTANCIA: ms-clientes-svc
+      SPRING_INSTANCIA: ms-pedidos-svc
     ports:
       - "6280:8080"
     depends_on:
