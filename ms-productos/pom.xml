@@ -36,7 +36,7 @@
 		</dependency>
 		<dependency>
 		<!-- Nota: mucho cuidado con repetir dependencias, sobretodo con distintas versiones, produce errores extraños.
-			En este caso el container no encontraba del driver de postgres. Antes de hacer docker-compose ... 
+			En este caso el container no encontraba el driver de postgres. Antes de hacer docker-compose ... 
 			probar: mvn clean package -DskipTests y fijarse que no haya ninguna salida extraña.
 			Referencia: https://brainly.com/question/34183015
 		-->

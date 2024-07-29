@@ -57,7 +57,7 @@ class MsProductosApplicationTests {
 	/* Se usa este metodo porque @ServiceConnection no setea correctamente los parámetros por algún motivo,
 	 y luego el @Bean de ConnectionFactory de rabbitTemplate falla.
 	*/
-	 @DynamicPropertySource
+	@DynamicPropertySource
 	static void registerRabbitMQProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.rabbitmq.host", rabbitMQContainer::getHost);
 		registry.add("spring.rabbitmq.port", rabbitMQContainer::getAmqpPort);
@@ -161,7 +161,7 @@ class MsProductosApplicationTests {
 		
 		// Reducir stock por orden de compra
 		assertDoesNotThrow(
-			() -> rabbitTemplate.convertAndSend(RabbitMQConfig.ORDENES_COMPRA_EXCHANGE, RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, ordenCompraDTO));
+			() -> rabbitTemplate.convertAndSend(RabbitMQConfig.ORDENES_EXCHANGE, RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, ordenCompraDTO));
 
 		/* Esperar un poco para pegarle a la API. Si no ProductoController retorna más rapido
 		   su respuesta que lo que el mensaje de rabbit es recibido, procesado, reenviado y procesado

@@ -32,16 +32,15 @@ public class ProductoController {
     }
 
     @GetMapping
-    public List<Producto> getAll() {
+    public List<Producto> findAll() {
         return productoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> getById(@PathVariable Integer id) {
+    public ResponseEntity<Producto> findById(@PathVariable Integer id) {
         Optional<Producto> optionalProducto = productoService.findById(id);
-        if (optionalProducto.isPresent()) {
+        if (optionalProducto.isPresent())
             return ResponseEntity.ok(optionalProducto.get());
-        }
         else
             return ResponseEntity.notFound().build();
     }
@@ -65,7 +64,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{idProducto}/categoria/{idCategoria}")
-    public ResponseEntity<Producto> getById(@PathVariable Integer idProducto, @PathVariable Integer idCategoria) {
+    public ResponseEntity<Producto> updateCategoria(@PathVariable Integer idProducto, @PathVariable Integer idCategoria) {
         Optional<Producto> optionalProducto = productoService.findById(idProducto);
         Optional<Categoria> optionalCategoria = categoriaService.findById(idCategoria);
         if (optionalProducto.isPresent() && optionalCategoria.isPresent()) {
@@ -79,7 +78,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{idProducto}/descuento-promocional")
-    public ResponseEntity<Void> update(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
+    public ResponseEntity<Void> updateDescuentoPromocional(@PathVariable Integer idProducto, @RequestBody BigDecimal descuento) {
         Optional<Producto> optionalProducto = productoService.findById(idProducto);
         if (optionalProducto.isPresent()) {
             optionalProducto.get().setDescuentoPromocional(descuento);
@@ -88,5 +87,25 @@ public class ProductoController {
         }
         else return ResponseEntity.notFound().build(); 
     }
+
+    /* 
+    @GetMapping("/{idProducto}/descuento-promocional")
+    public ResponseEntity<BigDecimal> getDescuentoPromocional(@PathVariable Integer idProducto) {
+        Optional<Producto> optionalProducto = productoService.findById(idProducto);
+        if (optionalProducto.isPresent()) {
+            return ResponseEntity.ok(optionalProducto.get().getDescuentoPromocional());  
+        }
+        else return ResponseEntity.notFound().build(); 
+    }
+
+    @GetMapping("/{idProducto}/precio")
+    public ResponseEntity<BigDecimal> getPrecio(@PathVariable Integer idProducto) {
+        Optional<Producto> optionalProducto = productoService.findById(idProducto);
+        if (optionalProducto.isPresent()) {
+            return ResponseEntity.ok(optionalProducto.get().getPrecio());  
+        }
+        else return ResponseEntity.notFound().build(); 
+    }
+    */
 }
 
