@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+
+  ms-gateway-svc:
+    image: ms-gateway-svc:latest
+    container_name: ms-gateway-svc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+    ports:
+      - "3080:8080"
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true

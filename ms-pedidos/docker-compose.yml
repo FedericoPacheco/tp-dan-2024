@@ -50,6 +50,9 @@ services:
       SPRING_DATA_MONGODB_URL: mongodb://root:dan@mongo-dan:27017/pedidosdb?authSource=admin
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      #Eureka
+      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+      SPRING_INSTANCIA: ms-clientes-svc
     ports:
       - "6280:8080"
     depends_on:
