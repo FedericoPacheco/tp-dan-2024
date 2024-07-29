@@ -139,7 +139,7 @@ class MsPedidosApplicationTests {
 		String idPedido = valueFromJsonString(resultado, "id");
 
 		// Actualizar estado del pedido
-		mockMvc.perform(put("/api/pedidos/" + idPedido)
+		mockMvc.perform(put("/api/pedidos/estado/" + idPedido)
 			   .contentType(MediaType.APPLICATION_JSON)
 			   .content(asJsonString(EstadoPedido.ENTREGADO)))
 			   .andExpect(status().isNoContent());

@@ -13,6 +13,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class Pedido {
+
+    // Solución sencilla al problema de la hora. Si no, pone la hora del meridiano de Greenwich
+    public static final Integer GMT_ARGENTINA = -3;
     
     @Id
     private String id;
@@ -49,7 +53,7 @@ public class Pedido {
         this.IdObra = dto.getIdObra();
         this.idUsuario = dto.getIdUsuario();
         this.observaciones = dto.getObservaciones();
-        this.fecha = Instant.now();
+        this.fecha = Instant.now().plus(GMT_ARGENTINA, ChronoUnit.HOURS);
         this.total = BigDecimal.valueOf(0);
         this.historialEstados = new ArrayList<>();
         this.setEstado(EstadoPedido.INICIADO);

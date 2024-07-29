@@ -27,7 +27,7 @@ public class PedidoController {
         return pedidoService.findAll();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/estado/{id}")
     public ResponseEntity<Pedido> actualizarEstado(@PathVariable String id, @RequestBody EstadoPedido estado) {
         pedidoService.actualizarEstado(id, estado);
         return ResponseEntity.noContent().build();    

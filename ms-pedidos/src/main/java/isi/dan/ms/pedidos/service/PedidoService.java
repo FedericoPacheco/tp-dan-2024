@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 public class PedidoService {
     
     // No estoy seguro si esto está bien
-    public static String URL_PRODUCTOS = "http://ms-productos-svc:6180/api/productos/";
-    public static String URL_CLIENTES = "http://ms-clientes-svc:6080/api/clientes/";
+    public static String URL_PRODUCTOS = "http://ms-productos-svc:8080/api/productos/";
+    public static String URL_CLIENTES = "http://ms-clientes-svc:8080/api/clientes/";
 
     @Autowired
     private PedidoRepository pedidoRepository;

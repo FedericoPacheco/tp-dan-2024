@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "isi.dan.tp-integrador",
-    "dateExported": "2024-07-17T21:30:22.234Z",
+    "dateExported": "2024-07-29T19:49:41.738Z",
     "version": "1.1",
     "folders": [
         {
@@ -17,6 +17,13 @@
             "containerId": "",
             "created": "2024-07-17T19:05:44.150Z",
             "sortNum": 20000
+        },
+        {
+            "_id": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "ms-pedidos",
+            "containerId": "",
+            "created": "2024-07-27T00:09:16.379Z",
+            "sortNum": 30000
         }
     ],
     "requests": [
@@ -128,7 +135,7 @@
             "method": "POST",
             "sortNum": 70000,
             "created": "2024-07-17T19:06:11.331Z",
-            "modified": "2024-07-17T20:09:42.238Z",
+            "modified": "2024-07-27T00:11:56.165Z",
             "headers": [],
             "params": [],
             "body": {
@@ -226,6 +233,58 @@
                 "raw": "0.1",
                 "form": []
             },
+            "tests": []
+        },
+        {
+            "_id": "787bf69c-b64c-4800-be51-a8952e404c50",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "altaPedido",
+            "url": "http://localhost:6280/api/pedidos",
+            "method": "POST",
+            "sortNum": 130000,
+            "created": "2024-07-27T00:09:57.819Z",
+            "modified": "2024-07-27T00:14:04.191Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"idCliente\": 1,\n  \"idObra\": 1,\n  \"idUsuario\": 1,\n  \"observaciones\": \"\",\n  \"productos\": [{\"idProducto\": 1, \"cantidad\": 1}]\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "91a249c8-1a5b-445f-83d0-287f1f4c64d4",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "cambiarEstadoPedido",
+            "url": "http://localhost:6280/api/pedidos/estado/66a7ea9c13d1ba53a911374c",
+            "method": "PUT",
+            "sortNum": 140000,
+            "created": "2024-07-27T00:19:36.709Z",
+            "modified": "2024-07-29T19:28:39.632Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "\"ENTREGADO\"",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "353e6af7-376f-45cf-b5fa-83b45832e61f",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "getPedidosCliente",
+            "url": "http://localhost:6280/api/pedidos/cliente/1",
+            "method": "GET",
+            "sortNum": 150000,
+            "created": "2024-07-27T00:23:55.750Z",
+            "modified": "2024-07-29T19:29:27.781Z",
+            "headers": [],
+            "params": [],
             "tests": []
         }
     ]

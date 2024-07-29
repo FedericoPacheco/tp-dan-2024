@@ -1,6 +1,7 @@
 package isi.dan.ms.pedidos.model;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class HistorialPedido {
 
     public HistorialPedido(EstadoPedido estado) {
         this.estado = estado;
-        this.fecha = Instant.now();
+        this.fecha = Instant.now().minus(Pedido.GMT_ARGENTINA, ChronoUnit.HOURS);
+        this.detalle = "";
     }
 }
