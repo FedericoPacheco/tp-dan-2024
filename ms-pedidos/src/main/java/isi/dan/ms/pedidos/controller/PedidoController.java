@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {
@@ -22,7 +21,6 @@ public class PedidoController {
  
     @PostMapping
     public ResponseEntity<Pedido> create(@RequestBody PedidoDTO dto) {
-        log.info("POST");
         return ResponseEntity.ok(pedidoService.save(dto));
     }
 

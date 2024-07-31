@@ -3,8 +3,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +15,7 @@ import org.testcontainers.containers.MySQLContainer;
 
 import isi.dan.msclientes.model.EstadoObra;
 import isi.dan.msclientes.model.Obra;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 * https://github.com/ivangfr/springboot-testing-mysql
 */
 
+@Slf4j
 @ActiveProfiles("db") // Usar application-db.properties
 //@DataJpaTest // Usar solo componentes de JPA
 @SpringBootTest // Carga todo el "application context". Hace funcionar mvn test, necesario para jacoco
@@ -44,7 +44,6 @@ import static org.junit.Assert.assertTrue;
 public class ObraRepositoryTest {
 
     Obra obra1, obra2, obra3;
-    Logger log = LoggerFactory.getLogger(ObraRepositoryTest.class);
 
     @Container
     @ServiceConnection

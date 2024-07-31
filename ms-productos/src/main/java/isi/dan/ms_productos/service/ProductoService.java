@@ -1,7 +1,5 @@
 package isi.dan.ms_productos.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +19,13 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    Logger log = LoggerFactory.getLogger(ProductoService.class);
-
     @RabbitListener(queues = RabbitMQConfig.ORDENES_COMPRA_QUEUE)
     public Boolean gestionarReducirStock(OrdenCompraDTO dto) {
-        log.info("Reducir stock: " + dto);
         return this.reducirStock(dto);
     }
 
     @RabbitListener(queues = RabbitMQConfig.ORDENES_PROVISION_QUEUE)
     public void gestionarIncrementarStock(OrdenProvisionDTO dto) {
-        log.info("Incrementar stock: " + dto);
         this.incrementarStock(dto);
     }
 
