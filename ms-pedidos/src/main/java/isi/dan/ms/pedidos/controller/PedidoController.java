@@ -7,6 +7,8 @@ import isi.dan.ms.pedidos.dto.PedidoDTO;
 import isi.dan.ms.pedidos.model.EstadoPedido;
 import isi.dan.ms.pedidos.model.Pedido;
 import isi.dan.ms.pedidos.service.PedidoService;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Optional;
 

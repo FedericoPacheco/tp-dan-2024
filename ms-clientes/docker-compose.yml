@@ -58,9 +58,10 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       DEFAULT-MAXIMO-DESCUBIERTO: 100000.0
-      #Eureka
       SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
       SPRING_INSTANCIA: ms-clientes-svc
+      GRAYLOG_HOST: graylog-svc
+      GRAYLOG_PORT: 12201
     ports:
       - "6080:8080"
     depends_on:

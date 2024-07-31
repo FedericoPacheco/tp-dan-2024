@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 @Service
 public class PedidoService {
     
@@ -42,8 +40,6 @@ public class PedidoService {
 
     @Autowired
     RestTemplate restTemplate;
-    
-    Logger log = LoggerFactory.getLogger(PedidoService.class);
     
     // TODO: validar que usuario y obra pertenecen al cliente?
     @SuppressWarnings("null")

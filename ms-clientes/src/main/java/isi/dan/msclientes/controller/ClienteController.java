@@ -20,8 +20,6 @@ import java.util.Optional;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
-    Logger log = LoggerFactory.getLogger(ClienteController.class);
-
     @Autowired
     private ClienteService clienteService;
 
@@ -73,7 +71,6 @@ public class ClienteController {
         try {
             return ResponseEntity.ok(usuarioHabilitadoService.asignarCliente(idCliente, idUsuario)); 
         } catch (NoSuchElementException e) {
-            log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
@@ -82,11 +79,9 @@ public class ClienteController {
     public ResponseEntity<Cliente> putObra(@PathVariable Integer idCliente, @PathVariable Integer idObra, @PathVariable Integer idUsuario) {
         try {
             Cliente cliente = obraService.asignarCliente(idUsuario, idCliente, idObra);
-            log.info("Obra asignada exitosamente!");
             return ResponseEntity.ok(cliente);
             
         } catch (Exception e) {
-            log.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
