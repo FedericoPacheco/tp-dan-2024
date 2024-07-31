@@ -8,6 +8,7 @@
 services:
   mongo:
     image: mongo #mongo:6.0.14
+    container_name: graylog-mongo
     restart: always
     #ports:
     #  - 27017:27017
@@ -24,6 +25,7 @@ services:
   #  image: elasticsearch:8.14.3
   opensearch:
     image: opensearchproject/opensearch
+    container_name: graylog-opensearch
     restart: always
     volumes:
       - opensearch-data:/data/db
@@ -39,11 +41,19 @@ services:
       - graylog-net
 
 
-  # Acceder: http://localhost:9000
+  # 1) Acceder: http://localhost:9000
   # User: admin
   # Pass: graylog-dan-super-secret
+
+  # 2) Configurar en interfaz web:
+  # 2.1) Ir a System > Inputs
+  # 2.2) Seleccionar "GELF UDP" de la lista desplegable
+  # 2.3) Click en "Launch new input"
+  # 2.4) Setear título y puerto 12201 y guardar
+
   svc:
     image: graylog/graylog:6.0.4
+    container_name: graylog-svc
     volumes:
       - graylog-data:/data
     ports:
