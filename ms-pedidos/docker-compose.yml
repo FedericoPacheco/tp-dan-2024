@@ -57,7 +57,7 @@ services:
       GRAYLOG_HOST: graylog-svc
       GRAYLOG_PORT: 12201
     ports:
-      - "6280-6282:8080"
+      - "6280-6300:8080"
     depends_on:
       - mongo-dan
     networks:
