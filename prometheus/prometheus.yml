@@ -1,0 +1,19 @@
+#https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus-eureka.yml
+#https://prometheus.io/docs/prometheus/latest/configuration/configuration/#eureka_sd_config
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Monitorear prometheus mismo
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [localhost:9090]
+
+  - job_name: 'eureka'
+    metrics_path: /actuator/prometheus
+  # Recuperar de Eureka los servicios
+    eureka_sd_configs:
+    - server: http://ms-eureka-svc:8761/eureka/
+      #path: /eureka/apps

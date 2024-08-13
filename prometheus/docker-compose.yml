@@ -1,0 +1,23 @@
+# Armar todo y correr
+# docker-compose -f ./prometheus/docker-compose.yml up --build -d
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml
+    environment:
+      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true
+
+volumes:
+  prometheus-data:
