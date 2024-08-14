@@ -9,9 +9,9 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
-    command: --config.file=/etc/prometheus/prometheus.yml
-    environment:
-      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --log.level=debug
     networks:
       - backend-net
 
