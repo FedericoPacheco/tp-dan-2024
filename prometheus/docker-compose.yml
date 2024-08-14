@@ -14,10 +14,31 @@ services:
       - --log.level=debug
     networks:
       - backend-net
+      - prometheus-net
+
+
+  # Credenciales:
+  #   user: admin
+  #   pass: admin
+  grafana:
+    image: 'grafana/grafana:latest'
+    ports:
+      - 6591:3000
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources      
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - prometheus
+    networks:
+      - backend-net
+      - prometheus-net
 
 networks:
   backend-net:
     external: true
+  prometheus-net:
+    driver: bridge
 
 volumes:
   prometheus-data:
