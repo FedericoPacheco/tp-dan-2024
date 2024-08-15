@@ -1,0 +1,55 @@
+# Armar todo y correr
+# docker-compose -f ./prometheus/docker-compose.yml up --build -d
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --log.level=debug
+    networks:
+      - backend-net
+      - prometheus-net
+
+
+  # 1) Ir a http://localhost:6591 e iniciar sesión con las siguientes credenciales:
+  #   user: admin
+  #   pass: admin
+  # 2) Configurar data source:
+  #   2.1) Connections > Add new connection > Buscar "Prometheus" y seleccionarlo
+  #   2.2) Agregar la url: http://prometheus:9090 ; y dejar el resto de las configuraciones por defecto
+  #   2.3) Guardar
+  # 3) Agregar dashboard:
+  #   3.1) Ir a Dashboards > Add dashboard
+  #   3.2) Add visualization > escribir una consulta y ver que genera con "Run queries". Ejemplo en código:
+  #           sum(http_server_requests_seconds_count{uri="/api/pedidos"}) + sum(http_server_requests_seconds_count{uri="/api/pedidos/{id}"})
+  #        Explicación: suma de las peticiones http hechas a "api/pedidos" de las instancias + lo mismo para "/api/pedidos/{id}". 
+  #        Mandar algunas peticiones antes para verificar el comportamiento
+  #   3.3) También se puede importar grafana-dashboard.json directamente
+  grafana:
+    image: 'grafana/grafana:latest'
+    ports:
+      - 6591:3000
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources      
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - prometheus
+    networks:
+      - backend-net
+      - prometheus-net
+
+networks:
+  backend-net:
+    external: true
+  prometheus-net:
+    driver: bridge
+
+volumes:
+  prometheus-data:
