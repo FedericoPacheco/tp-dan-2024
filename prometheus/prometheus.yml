@@ -20,9 +20,8 @@ scrape_configs:
   # Encontrar los sercicios dinámicamente
   - job_name: 'eureka'
     metrics_path: /actuator/prometheus
-    scheme: http
     eureka_sd_configs:
-    - server: http://ms-eureka-svc:8761/eureka
+    - server: http://eureka-svc:8761/eureka
 
   # Troubleshooting:
   # * Acceder desde el navegador a: 

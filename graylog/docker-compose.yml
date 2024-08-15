@@ -7,7 +7,7 @@
 
 services:
   mongo:
-    image: mongo #mongo:6.0.14
+    image: mongo
     container_name: graylog-mongo
     restart: always
     #ports:
@@ -21,19 +21,14 @@ services:
     networks:
       - graylog-net
 
-  #elasticsearch:
-  #  image: elasticsearch:8.14.3
   opensearch:
     image: opensearchproject/opensearch
     container_name: graylog-opensearch
     restart: always
     volumes:
       - opensearch-data:/data/db
-    #ports:
-    #  - 9200:9200
     environment:
       OPENSEARCH_INITIAL_ADMIN_PASSWORD: Opensearch-dan-2024-pass
-      # Necesarios para solucionar varios errores
       discovery.type: single-node
       plugins.security.ssl.http.enabled: false
       plugins.security.disabled: true

@@ -81,16 +81,6 @@ public class PedidoServiceTest {
             pedidoNuevoDTO.getProductos().add(ordenCompra); 
         
             Mockito.when(restTemplate.getForObject(eq(PedidoService.URL_PRODUCTOS + Integer.toString(i)), eq(ProductoDTO.class))).thenReturn(producto);
-            /* Mockito.when(rabbitTemplate.convertSendAndReceive(
-                RabbitMQConfig.ORDENES_EXCHANGE, 
-                RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, 
-                ordenCompra
-            )).thenReturn(true);
-            Mockito.doNothing().when(rabbitTemplate).convertAndSend(
-                RabbitMQConfig.ORDENES_EXCHANGE, 
-                RabbitMQConfig.ORDENES_PROVISION_ROUTING_KEY, 
-                new OrdenProvisionDTO(ordenCompra.getIdProducto(), ordenCompra.getCantidad(), null)
-            ); */
         }
 
         Mockito.when(rabbitTemplate.convertSendAndReceive(
@@ -133,13 +123,6 @@ public class PedidoServiceTest {
     @Test
     public void montoMenorQueDescubiertoYStockNoActualizado() {
         cliente.setMaximoDescubierto(BigDecimal.valueOf(600));
-        /* for (OrdenCompraDTO ordenCompra: pedidoNuevoDTO.getProductos()) {
-            Mockito.when(rabbitTemplate.convertSendAndReceive(
-                RabbitMQConfig.ORDENES_EXCHANGE, 
-                RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, 
-                ordenCompra
-            )).thenReturn(false);
-        } */
         Mockito.when(rabbitTemplate.convertSendAndReceive(
             eq(RabbitMQConfig.ORDENES_EXCHANGE), 
             eq(RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY), 
@@ -151,13 +134,6 @@ public class PedidoServiceTest {
     @Test
     public void actualizarEstadoCancelado() {
         cliente.setMaximoDescubierto(BigDecimal.valueOf(600));
-        /* for (OrdenCompraDTO ordenCompra: pedidoNuevoDTO.getProductos()) {
-            Mockito.when(rabbitTemplate.convertSendAndReceive(
-                RabbitMQConfig.ORDENES_EXCHANGE, 
-                RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY, 
-                ordenCompra
-            )).thenReturn(false);
-        } */
         Mockito.when(rabbitTemplate.convertSendAndReceive(
             eq(RabbitMQConfig.ORDENES_EXCHANGE), 
             eq(RabbitMQConfig.ORDENES_COMPRA_ROUTING_KEY), 
@@ -199,5 +175,4 @@ public class PedidoServiceTest {
         pedidoService.actualizarEstado("idPedido", EstadoPedido.RECHAZADO);
         verify(pedidoRepository, never()).save(any(Pedido.class));
     }
-
 }
