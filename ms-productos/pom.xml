@@ -8,11 +8,11 @@
 		<version>3.2.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>isi.dan</groupId>
+	<groupId>utn.frsf.isi.dan</groupId>
 	<artifactId>ms-productos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>ms-productos</name>
-	<description>Demo project for Spring Boot</description>
+	<description>TP integrador: Pacheco Pilan, Velazco</description>
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2023.0.2</spring-cloud.version>
@@ -35,10 +35,9 @@
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 		<dependency>
-		<!-- Nota: mucho cuidado con repetir dependencias, sobretodo con distintas versiones, produce errores extraños.
-			En este caso el container no encontraba el driver de postgres. Antes de hacer docker-compose ... 
-			probar: mvn clean package -DskipTests y fijarse que no haya ninguna salida extraña.
-			Referencia: https://brainly.com/question/34183015
+		<!-- 
+			Nota: mucho cuidado con repetir dependencias, sobretodo con distintas versiones, produce errores extraños.
+			Antes de hacer docker-compose ... probar: mvn clean package -DskipTests y fijarse que no haya ninguna salida extraña.
 		-->
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
