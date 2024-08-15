@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "isi.dan.tp-integrador",
-    "dateExported": "2024-07-29T22:10:16.678Z",
+    "dateExported": "2024-08-15T13:25:17.634Z",
     "version": "1.1",
     "folders": [
         {
@@ -44,6 +44,34 @@
                 "raw": "{\n  \"nombre\": \"TP DAN\",\n  \"correoElectronico\": \"tp-dan@test.com\",\n  \"cuit\": \"1234567889\",\n  \"maximoDescubierto\": 2147483647.0,\n  \"maximaCantidadObrasEnEjecucion\": 2147483647\n}",
                 "form": []
             },
+            "tests": []
+        },
+        {
+            "_id": "4564894c-5fb3-4c2a-b399-e14496dfdf40",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "931e34f4-9adc-4d9d-b2ef-3fee6dc244dd",
+            "name": "findCliente",
+            "url": "http://localhost:3080/clientes/api/clientes/1",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2024-08-15T12:49:02.183Z",
+            "modified": "2024-08-15T13:02:29.643Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "0bf85393-b8fc-4960-b046-c8dddb98bd7f",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "931e34f4-9adc-4d9d-b2ef-3fee6dc244dd",
+            "name": "findAllClientes",
+            "url": "http://localhost:3080/clientes/api/clientes",
+            "method": "GET",
+            "sortNum": 17500,
+            "created": "2024-08-15T13:23:28.288Z",
+            "modified": "2024-08-15T13:23:51.739Z",
+            "headers": [],
+            "params": [],
             "tests": []
         },
         {
@@ -165,6 +193,34 @@
             "tests": []
         },
         {
+            "_id": "9a8fb41c-5cbf-47b1-bb72-bbd9c1b3ab65",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "20b6cbc8-7448-4c82-beb0-6e8bb918d3b1",
+            "name": "findProducto",
+            "url": "http://localhost:3080/productos/api/productos/1",
+            "method": "GET",
+            "sortNum": 85000,
+            "created": "2024-08-15T13:06:47.423Z",
+            "modified": "2024-08-15T13:07:02.686Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c1f12139-0851-457c-b687-e3b3f8092ea3",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "20b6cbc8-7448-4c82-beb0-6e8bb918d3b1",
+            "name": "findAllProductos",
+            "url": "http://localhost:3080/productos/api/productos",
+            "method": "GET",
+            "sortNum": 87500,
+            "created": "2024-08-15T13:08:15.562Z",
+            "modified": "2024-08-15T13:08:40.860Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
             "_id": "f41ce1ec-bc20-4693-ada1-fef2026ca1dc",
             "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
             "containerId": "20b6cbc8-7448-4c82-beb0-6e8bb918d3b1",
@@ -252,6 +308,34 @@
                 "raw": "{\n  \"idCliente\": 1,\n  \"idObra\": 1,\n  \"idUsuario\": 1,\n  \"observaciones\": \"\",\n  \"productos\": [{\"idProducto\": 1, \"cantidad\": 1}]\n}",
                 "form": []
             },
+            "tests": []
+        },
+        {
+            "_id": "13560334-31d8-4e62-b444-fa42fe40b9bd",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "findPedido",
+            "url": "http://localhost:3080/pedidos/api/pedidos/66bdf78cebab6c6bad058415",
+            "method": "GET",
+            "sortNum": 135000,
+            "created": "2024-08-15T13:02:43.947Z",
+            "modified": "2024-08-15T13:03:20.413Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f68dfb4b-9a09-4074-a5be-09f9845ba90f",
+            "colId": "04b775b9-1c4e-41a9-b512-fec7475f015a",
+            "containerId": "a5911550-fe68-4a5d-8350-3a3b2adc6135",
+            "name": "findAllPedidos",
+            "url": "http://localhost:3080/pedidos/api/pedidos",
+            "method": "GET",
+            "sortNum": 137500,
+            "created": "2024-08-15T13:24:11.418Z",
+            "modified": "2024-08-15T13:24:23.741Z",
+            "headers": [],
+            "params": [],
             "tests": []
         },
         {
