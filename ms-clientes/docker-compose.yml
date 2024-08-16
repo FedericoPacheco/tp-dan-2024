@@ -10,12 +10,10 @@
 # Asegurarse que la arquitectura de la imagen soporte la misma que la de la compu: amd64 -> x86/64, arm64
 # No olvidarse de ejecutar Docker desktop
 
-version: '3.8'
-
 services:
   mysql:
+    container_name: ms-clientes-mysql
     image: mysql:8.0
-    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: danrootpassword
       MYSQL_DATABASE: dandb
@@ -29,11 +27,11 @@ services:
       - clientes-net
 
   # Acceder desde el navegador: http://localhost:8086/
-  phpmyadmin-dan:
+  phpmyadmin:
+    container_name: ms-clientes-phpmyadmin
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-container
     environment:
-      PMA_HOST: mysql-db
+      PMA_HOST: ms-clientes-mysql
       PMA_USER: danuser
       PMA_PASSWORD: danpassword
     ports:
@@ -43,14 +41,14 @@ services:
     networks:
       - clientes-net
 
-  ms-clientes-svc:
-    image: ms-clientes-svc:latest
+  svc:
     container_name: ms-clientes-svc
+    image: ms-clientes-svc:latest
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/dandb
+      SPRING_DATASOURCE_URL: jdbc:mysql://ms-clientes-mysql:3306/dandb
       SPRING_DATASOURCE_USERNAME: danuser
       SPRING_DATASOURCE_PASSWORD: danpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -58,8 +56,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       DEFAULT-MAXIMO-DESCUBIERTO: 100000.0
-      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
-      SPRING_INSTANCIA: ms-clientes-svc
+      SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
       GRAYLOG_HOST: graylog-svc
       GRAYLOG_PORT: 12201
     ports:

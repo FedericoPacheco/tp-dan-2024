@@ -1,0 +1,23 @@
+# Armar todo y correr
+# docker-compose -f ./eureka/docker-compose.yml up --build -d
+
+services:
+  # Dashboard para ver servicios registrados: http://localhost:8761/
+  eureka:
+    container_name: eureka-svc
+    image: ms-eureka-svc:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
+      SPRING_EUREKA_HOST_NAME: eureka-svc
+      SPRING_EUREKA_PORT: 8761
+    ports:
+      - "8761:8761"
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true

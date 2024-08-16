@@ -22,8 +22,6 @@ public class RabbitMQConfig {
     public static final String ORDENES_PROVISION_ROUTING_KEY = "orden.provision";
     public static final String ORDENES_EXCHANGE = "OrdenesExchange";
 
-    //Logger log = LoggerFactory.getLogger(RabbitMQConfig.class);
-
     @Bean
     public Queue ordenesCompraQueue() {
         return new Queue(ORDENES_COMPRA_QUEUE, true);

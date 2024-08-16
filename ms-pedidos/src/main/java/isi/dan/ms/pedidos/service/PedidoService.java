@@ -25,10 +25,6 @@ import java.util.Optional;
 @Service
 public class PedidoService {
     
-    // Pre-eureka
-    //public static String URL_PRODUCTOS = "http://ms-productos-svc:8080/api/productos/";
-    //public static String URL_CLIENTES = "http://ms-clientes-svc:8080/api/clientes/";
-
     public static String URL_PRODUCTOS = "http://ms-productos/api/productos/";
     public static String URL_CLIENTES = "http://ms-clientes/api/clientes/";
 
@@ -41,7 +37,6 @@ public class PedidoService {
     @Autowired
     RestTemplate restTemplate;
     
-    // TODO: validar que usuario y obra pertenecen al cliente?
     @SuppressWarnings("null")
     public Pedido save(PedidoDTO dto) {
     
@@ -80,12 +75,6 @@ public class PedidoService {
                 ProductoDTO producto = restTemplate.getForObject(URL_PRODUCTOS + detalle.getIdProducto(), ProductoDTO.class);
                 detalle.setPrecioUnitario(producto.getPrecio());
                 detalle.setDescuento(producto.getDescuentoPromocional());
-                /* 
-                detalle.setPrecioUnitario(
-                    restTemplate.getForObject(URL_PRODUCTOS + "precio/" + detalle.getIdProducto(), BigDecimal.class));
-                detalle.setDescuento(
-                    restTemplate.getForObject(URL_PRODUCTOS + "descuento-Promocional/" + detalle.getIdProducto(), BigDecimal.class));            
-                */
            }
             catch (HttpClientErrorException e) {
                 detallesInvalidos.add(detalle);

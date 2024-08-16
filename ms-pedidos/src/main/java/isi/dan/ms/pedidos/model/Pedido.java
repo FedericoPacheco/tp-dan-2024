@@ -17,13 +17,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "pedidos")
-//@Data
+
 @Getter
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
 @ToString
+@Document(collection = "pedidos")
 public class Pedido {
 
     // Solución sencilla al problema de la hora. Si no, pone la hora del meridiano de Greenwich
@@ -33,8 +33,6 @@ public class Pedido {
     private String id;
     
     private Instant fecha;
-    // Para qué un número de pedido si ya tenés el id?
-    //private Integer numeroPedido;
     private String observaciones;
     private BigDecimal total;
     
@@ -43,7 +41,6 @@ public class Pedido {
     private EstadoPedido estado;
     private List<DetallePedido> detalles;
 
-    // private Cliente cliente;
     private Integer idCliente;
     private Integer IdObra;
     private Integer idUsuario;

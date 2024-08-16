@@ -4,13 +4,11 @@
 # Armar todo y correr
 # docker-compose -f ./ms-productos/docker-compose.yml up --build -d
 
-version: '3.8'
-
 services:
 
-  pg-dan:
+  postgres:
     image: postgres
-    container_name: pg-dan-db
+    container_name: ms-productos-postgres
     restart: always
     ports:
       - 5432:5432
@@ -24,43 +22,42 @@ services:
       - productos-net
 
   # Acceder desde el navegador: http://localhost:8032/ colocando las credenciales de pgadmin.
-  # Luego registrar el servidor, poniendo como host "pg-dan" (NO "localhost") y el resto 
+  # Luego registrar el servidor, poniendo como host "ms-productos-postgres" (NO "localhost") y el resto 
   # de credenciales de la db 
-  pgadmin-dan:
+  pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin-container
+    container_name: ms-productos-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: mdomingu@gmail.com
       PGADMIN_DEFAULT_PASSWORD: pgdan
     ports:
       - "8032:80"
     depends_on:
-      - pg-dan
+      - postgres
     networks:
       - productos-net
 
-  ms-productos-svc:
+  svc:
     image: ms-productos-svc:latest
     container_name: ms-productos-svc
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-dan-db:5432/pg-dan
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ms-productos-postgres:5432/pg-dan
       SPRING_DATASOURCE_USERNAME: pguser
       SPRING_DATASOURCE_PASSWORD: pgpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_HOST: rabbit-mq-svc
       SPRING_RABBITMQ_PORT: 5672
-      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
-      SPRING_INSTANCIA: ms-productos-svc
+      SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
       GRAYLOG_HOST: graylog-svc
       GRAYLOG_PORT: 12201
     ports:
       - "6180:8080"
     depends_on:
-      - pg-dan
+      - postgres
     networks:
       - productos-net
       - backend-net

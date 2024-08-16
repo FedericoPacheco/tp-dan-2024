@@ -1,18 +1,15 @@
-version: '3.8'
-
 # Armar todo y correr
 # docker-compose -f ./gateway/docker-compose.yml up --build -d
 
 services:
-
-  ms-gateway-svc:
+  gateway:
     image: ms-gateway-svc:latest
-    container_name: ms-gateway-svc
+    container_name: gateway-svc
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      SPRING_EUREKA_DEFAULT_ZONE: http://ms-eureka-svc:8761/eureka/
+      SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
     ports:
       - "3080:8080"
     networks:

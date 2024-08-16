@@ -4,6 +4,7 @@
 services:
   prometheus:
     image: prom/prometheus:latest
+    container_name: prometheus-svc
     ports:
       - 9090:9090
     volumes:
@@ -33,6 +34,7 @@ services:
   #   3.3) También se puede importar grafana-dashboard.json directamente
   grafana:
     image: 'grafana/grafana:latest'
+    container_name: prometheus-grafana
     ports:
       - 6591:3000
     volumes:
