@@ -8,8 +8,8 @@
             <originHost>ms-clientes</originHost>
             <includeMdcData>true</includeMdcData>
             <includeCallerData>false</includeCallerData>
-            <includeRootCauseData>false</includeRootCauseData>
-            <includeLevelName>false</includeLevelName>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
             <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%m%nopex</pattern>
             </shortPatternLayout>
@@ -19,8 +19,18 @@
             <staticField>app_name:ms-clientes</staticField>
         </encoder>
     </appender>
-
     <root level="INFO">
         <appender-ref ref="GELF" />
     </root>
+    <!-- Evitar que se loggueen cosas innecesarias -->
+    <logger name="com.netflix"          level="OFF"/>
+    <logger name="com.zaxxer"           level="OFF"/>
+    <logger name="com.rabbitmq"         level="OFF"/>
+    <logger name="org.springframework"  level="OFF"/>
+    <logger name="org.mongodb"          level="OFF"/>
+    <logger name="org.apache"           level="OFF"/>
+    <logger name="org.hibernate"        level="OFF"/>
+    <logger name="io.prometheus"        level="OFF"/>
+    <logger name="jdk"                  level="OFF"/>
+
 </configuration>

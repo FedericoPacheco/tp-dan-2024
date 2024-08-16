@@ -48,7 +48,7 @@ services:
       SPRING_DATA_MONGODB_USERNAME: root
       SPRING_DATA_MONGODB_PASSWORD: dan
       SPRING_DATA_MONGODB_URL: mongodb://root:dan@ms-pedidos-mongo:27017/pedidosdb?authSource=admin
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_HOST: rabbit-mq-svc
       SPRING_RABBITMQ_PORT: 5672
       SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
       GRAYLOG_HOST: graylog-svc

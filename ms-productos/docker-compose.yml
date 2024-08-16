@@ -49,7 +49,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: pgpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_HOST: rabbit-mq-svc
       SPRING_RABBITMQ_PORT: 5672
       SPRING_EUREKA_DEFAULT_ZONE: http://eureka-svc:8761/eureka/
       GRAYLOG_HOST: graylog-svc

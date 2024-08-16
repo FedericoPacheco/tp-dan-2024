@@ -31,7 +31,7 @@ services:
     container_name: ms-clientes-phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
-      PMA_HOST: mysql-db
+      PMA_HOST: ms-clientes-mysql
       PMA_USER: danuser
       PMA_PASSWORD: danpassword
     ports:

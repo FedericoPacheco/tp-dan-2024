@@ -10,19 +10,13 @@ services:
     image: mongo
     container_name: graylog-mongo
     restart: always
-    #ports:
-    #  - 27017:27017
     volumes:
       - mongo-data:/data/db
-    #environment:
-      #MONGO_INITDB_ROOT_USERNAME: graylog-dan-user
-      #MONGO_INITDB_ROOT_PASSWORD: graylog-dan-pass
-      #MONGO_INITDB_DATABASE: graylog-dan
     networks:
       - graylog-net
 
   opensearch:
-    image: opensearchproject/opensearch
+    image: opensearchproject/opensearch 
     container_name: graylog-opensearch
     restart: always
     volumes:
@@ -46,6 +40,10 @@ services:
   # 2.3) Click en "Launch new input"
   # 2.4) Setear título y puerto 12201 y guardar
 
+  # 3) Troubleshooting para el error: "Deflector exists as an index and is not an alias"
+  #     3.1) Volver a configurar el input, eliminando el antiguo
+  #     3.2) Probar hacer: System > Indices > Maintenance > Cleanup & recalculate all index ranges
+
   svc:
     image: graylog/graylog:6.0.4
     container_name: graylog-svc
@@ -61,8 +59,8 @@ services:
       GRAYLOG_PASSWORD_SECRET: graylog-dan-super-secret
       # https://tools.keycdn.com/sha256-online-generator
       GRAYLOG_ROOT_PASSWORD_SHA2: db58d428f9a0dae0a30231931ea85ee900ab6cf05bc1113cb41772ad3abe8d98
-      GRAYLOG_MONGODB_URI: mongodb://mongo:27017/graylog   #mongodb://graylog-dan-user:graylog-dan-pass@mongo:27017/graylog-dan?authSource=admin
-      GRAYLOG_ELASTICSEARCH_HOSTS: http://opensearch:9200
+      GRAYLOG_MONGODB_URI: mongodb://graylog-mongo:27017/graylog
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://graylog-opensearch:9200
       GRAYLOG_HTTP_EXTERNAL_URI: http://localhost:9000/
     depends_on:
       - mongo
