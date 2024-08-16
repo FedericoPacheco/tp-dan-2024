@@ -73,18 +73,20 @@ public class PedidoService {
             try {
                 // Llamar a ms-productos
                 ProductoDTO producto = restTemplate.getForObject(URL_PRODUCTOS + detalle.getIdProducto(), ProductoDTO.class);
+                
                 detalle.setPrecioUnitario(producto.getPrecio());
                 detalle.setDescuento(producto.getDescuentoPromocional());
-           }
-            catch (HttpClientErrorException e) {
-                detallesInvalidos.add(detalle);
-            }
-            detalle.setPrecioTotal(
+                detalle.setPrecioTotal(
                 BigDecimal.valueOf(detalle.getCantidad()).multiply(
                     detalle.getPrecioUnitario()).multiply(
                         BigDecimal.ONE.subtract(detalle.getDescuento()))
-            );
-            pedido.setTotal(pedido.getTotal().add(detalle.getPrecioTotal()));
+                );
+                
+                pedido.setTotal(pedido.getTotal().add(detalle.getPrecioTotal()));
+            }
+            catch (HttpClientErrorException e) {
+                detallesInvalidos.add(detalle);
+            }
         }
         // Remover productos que no existen de los detalles        
         pedido.getDetalles().removeAll(detallesInvalidos);
