@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -30,7 +31,6 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Cliente.class)
 public class Cliente {
     
     @Id
@@ -56,10 +56,12 @@ public class Cliente {
 
     @Column(name = "obras_asignadas")
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Obra> obrasAsignadas = new ArrayList<>();
 
     @Column(name = "usuarios_habilitados")
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<UsuarioHabilitado> usuariosHabilitados = new ArrayList<>();
 
     public BigDecimal getDescubierto() {

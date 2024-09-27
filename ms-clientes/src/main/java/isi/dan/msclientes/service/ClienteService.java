@@ -23,6 +23,13 @@ public class ClienteService {
         return clienteRepository.findById(id);
     }
 
+    public Optional<Cliente> findByEmail(String email) {
+        return clienteRepository.findByCorreoElectronico(email);
+    }
+    public Optional<Cliente> findByCuit(String cuit) {
+        return clienteRepository.findByCuit(cuit);
+    }
+
     public Cliente save(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
