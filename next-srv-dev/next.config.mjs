@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 
+import { isUtf8 } from 'buffer';
+
+
 const nextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
-
+    config.optimization.minimize = false;
     return config;
   },
   images: {
