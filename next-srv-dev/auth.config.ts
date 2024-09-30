@@ -5,6 +5,7 @@ export const authConfig = {
     signIn: '/login',
     signOut: '/',
   },
+  secret: process.env.AUTH_SECRET,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
