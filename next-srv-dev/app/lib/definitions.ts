@@ -1,5 +1,3 @@
-import { list } from "postcss";
-
 export type User = {
   id: string;
   name: string;
@@ -36,9 +34,9 @@ export type Obra = {
 export type ObraState = 'PENDIENTE' | 'HABILITADA' | 'FINALIZADA';
 
 export type ObraSegmentada = {
-  obrasHabilitadas : Obra[];
-  obrasPendientes : Obra[];
-  obrasFinalizadas : Obra[];
+  obrasHabilitadas: Obra[];
+  obrasPendientes: Obra[];
+  obrasFinalizadas: Obra[];
 };
 export type Categoria = {
   id: number;
@@ -84,14 +82,12 @@ export interface ObrasResponse extends Response {
   json(): Promise<Obra[]>;
 }
 export type ProductSearchParametersContainer = {
-  params: {},
-  searchParams: {
-    categoria?: string;
-    nombre?: string;
-    codigo?: string;
-    precioMin?: string;
-    precioMax?: string;
-    stockMin?: string;
-    stockMax?: string;
-  }
+  categoria?: string;
+  nombre?: string;
+  codigo?: string;
+  precioMin?: string;
+  precioMax?: string;
+  stockMin?: string;
+  stockMax?: string;
+
 }

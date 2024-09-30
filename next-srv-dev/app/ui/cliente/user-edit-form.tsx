@@ -4,7 +4,6 @@ import {
   AtSymbolIcon,
   BuildingOfficeIcon,
   IdentificationIcon,
-  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useActionState } from "react";
 import { Button } from "../button";
@@ -15,8 +14,9 @@ export function UserEditForm({
 }: {
   usuario: UsuarioHabilitado | null;
 }) {
-  if (!usuario) return <div>loading...</div>;
-
+  if (!usuario) {
+    usuario = {} as UsuarioHabilitado;
+  }
   const initialState: StateUser = { message: null, errors: {} };
   const [state, formAction] = useActionState(editUsuario, initialState);
 
@@ -102,6 +102,13 @@ export function UserEditForm({
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+        </div>
+        <div>
+          {state !== undefined && state.message && (
+            <div className="flex justify-center text-red-500 text-sm">
+              {state.message}
+            </div>
+          )}
         </div>
         <div className="flex justify-center py-2 space-x-6">
           <Button className="border-2 p-2" type="submit">

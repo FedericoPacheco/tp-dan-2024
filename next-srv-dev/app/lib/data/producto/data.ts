@@ -37,7 +37,7 @@ export async function fetchProducts(searchParamsContainer : ProductSearchParamet
   if(response.ok) data = await response.json();
   else throw new Error('Failed to fetch product data.');
   //Voy a escribir unos filtros bastante feos, lo ideal seria hacer esto en el microsrervicio.
-  const searchParams = searchParamsContainer.searchParams;
+  const searchParams = searchParamsContainer;
 
   if(searchParams.categoria) data = data.filter((product) => product.categoria.id === Number(searchParams.categoria));
   

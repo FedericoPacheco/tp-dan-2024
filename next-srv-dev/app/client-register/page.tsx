@@ -17,13 +17,13 @@ export default function ClientRegister() {
         <ClientRegisterForm />
         <div className='flex-col items-center justify-center items-end rounded-lg bg-ebony-400 p-3'>
           <p className={`${lusitana.className} text-[20px] text-white-50 p-2`}>
-            La <strong>maxima cantidad de obras en ejecucion</strong> que podrá llevar a cabo una vez registrado será de 2.
+            La <strong>maxima cantidad de obras en ejecucion</strong> que podrá llevar a cabo una vez registrado sera de 2.
           </p>
           <p className={`${lusitana.className} text-[20px] text-white-50 p-2`}>
-            El <strong>maximo descubierto</strong> inical será de $1000.
+            El <strong>maximo descubierto</strong> inical sera de $1000.
           </p>
           <p className={`${lusitana.className} text-[20px] text-white-50 p-2`}>
-            <strong>Comunicarse con soporte para su modificación</strong>
+            <strong>Comunicarse con soporte para su modificacion</strong>
           </p>
         </div>
         <div className='flex items-center justify-center items-end rounded-lg bg-ebony-400 p-3'>

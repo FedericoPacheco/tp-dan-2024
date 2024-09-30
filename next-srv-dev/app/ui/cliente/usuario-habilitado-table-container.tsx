@@ -10,13 +10,6 @@ export default function UserTableContainer({
 }: {
   usuarios: UsuarioHabilitado[];
 }) {
-  if (!usuarios)
-    return (
-      <div>
-        <h1></h1>
-      </div>
-    );
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (

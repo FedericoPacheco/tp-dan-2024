@@ -70,8 +70,8 @@ export async function fetchObras() : Promise<ObraSegmentada> {
     throw new Error('Failed to fetch obras data.');
   }  
 }
-export async function fetchObrasCliente(mail : string) : Promise<ObraSegmentada> {
-
+export async function fetchObrasCliente(mail : string | null | undefined) : Promise<ObraSegmentada> {
+  if(!mail) throw new Error('Mail not found.');
   const clientResponse : ClientResponse = await fetch(urlGeneral + "/clientes/api/clientes/searchByEmail?email=" + mail);
 
   if(!clientResponse.ok) throw new Error('Failed to fetch cliente.');

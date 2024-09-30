@@ -16,7 +16,7 @@ export type StateFilter = {
     precioMax?: string[];
     stockMin?: string[];
     stockMax?: string[];
-  } | {};
+  } | object;
   message?: string | null;
 };
 export type StateCreate = {
@@ -28,7 +28,7 @@ export type StateCreate = {
     descuento?: string[];
     stock?: string[];
     stockMinimo?: string[];
-  } | {};
+  } | object;
   message?: string | null;
 } | undefined;
 
@@ -36,7 +36,7 @@ export type StateEditStock = {
   errors?: {
     producto?: string[];
     stock?: string[];
-  } | {};
+  } | object;
   message?: string | null;
 } | undefined;
 

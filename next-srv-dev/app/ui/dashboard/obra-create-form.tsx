@@ -15,8 +15,9 @@ export default function CreateObraForm({
 }: {
   cliente: Cliente | undefined;
 }) {
-  if (cliente === undefined) return null;
-
+  if (!cliente) {
+    cliente = {} as Cliente;
+  }
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createObra, initialState);
   return (

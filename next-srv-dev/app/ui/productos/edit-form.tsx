@@ -2,8 +2,6 @@
 
 import { useActionState } from "react";
 import {
-  TableCellsIcon,
-  PlusCircleIcon,
   MinusCircleIcon,
   CubeIcon,
   IdentificationIcon,

@@ -4,16 +4,21 @@ import ForbbidenAccess from "@/app/ui/forbbiden";
 import EditStock from "@/app/ui/productos/edit-form";
 import { auth } from "@/auth";
 
-export default async function Page({ params }: { params: { id: string } }) {
+type SegmentParams = {
+  id: string;
+};
+
+export default async function Page({ params }: { params: Promise<SegmentParams> }) {
   const session = await auth();
   //Funciona, pero esta muy atado con alambre.
   const isAdmin = session?.user?.email === "admin@admin.com";
-
+  const paramsReales = await params;
+  const id = Number(paramsReales.id);
   if (!isAdmin) {
     return <ForbbidenAccess />;
   }
 
-  const producto = await fetchProduct(Number(params.id));
+  const producto = await fetchProduct(Number(id));
 
   return (
     <div>

@@ -1,5 +1,4 @@
 import { lusitana } from "@/app/ui/fonts/fonts";
-export const experimental_ppr = true;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

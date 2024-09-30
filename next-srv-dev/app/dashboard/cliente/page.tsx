@@ -99,7 +99,7 @@ export default async function Page() {
         {isAdmin &&
           clients.map(async (cliente) => 
             (
-            <div className="bg-white-200 p-2 m-2">
+            <div key={cliente.id} className="bg-white-200 p-2 m-2">
               <ClienteEditForm cliente={cliente} isDefaultUser={false} />
               <UserTableContainer usuarios={await fetchUsers(cliente)}/>
             </div>

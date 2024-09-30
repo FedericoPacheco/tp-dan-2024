@@ -1,8 +1,8 @@
-import { fetchProducts } from "@/app/lib/data";
+import { fetchProducts } from "@/app/lib/data/producto/data";
 import ForbbidenAccess from "@/app/ui/forbbiden";
-import AñadirStock from "@/app/ui/productos/edit-stock-form";
 import { lusitana } from "@/app/ui/fonts/fonts";
 import { auth } from "@/auth";
+import ReponerStock from "@/app/ui/productos/edit-stock-form";
 
 export default async function Page() {
   const session = await auth();
@@ -12,7 +12,7 @@ export default async function Page() {
   if (!isAdmin) {
     return <ForbbidenAccess />;
   }
-  const productos = await fetchProducts({ params: {}, searchParams: {} });
+  const productos = await fetchProducts({ categoria: "", nombre: "", codigo: "", precioMin: "", precioMax: "", stockMin: "", stockMax: "" });
 
   return (
     <div className="bg-white-200">
@@ -21,7 +21,7 @@ export default async function Page() {
       >
         <strong>Reponer Stock</strong>
       </h1>
-      <AñadirStock productos={productos} />
+      <ReponerStock productos={productos} />
     </div>
   );
 }

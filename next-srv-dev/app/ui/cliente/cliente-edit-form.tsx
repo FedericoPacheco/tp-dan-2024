@@ -17,8 +17,9 @@ export function ClienteEditForm({
   cliente: Cliente | null;
   isDefaultUser: boolean;
 }) {
-  if (!cliente) return <div>loading...</div>;
-
+  if (!cliente) {
+    cliente = {} as Cliente;
+  }
   const initialState: StateClient = { message: null, errors: {} };
   const [state, formAction] = useActionState(editCliente, initialState);
 
@@ -150,6 +151,9 @@ export function ClienteEditForm({
               <PlusCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+        </div>
+        <div id="message" aria-live="polite" aria-atomic="true">
+          {state.message && <p className="mt-2 text-sm text-green-500">{state.message}</p>}
         </div>
         <div className="flex justify-center py-2 space-x-6">
           <Button

@@ -9,7 +9,6 @@ import { db } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 
 import { z } from 'zod';
-import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -42,8 +41,8 @@ const FormSchema = z.object({
     invalid_type_error: 'Por favor escriba un email.',
   }).email({ message: 'Por favor escriba un email válido.' }),
   password: z.string({
-    invalid_type_error: 'Por favor escriba una contraseña.',
-  }).min(6, { message: 'La contraseña debe tener al menos 6 caracteres.' }),
+    invalid_type_error: 'Por favor escriba una contrasena.',
+  }).min(6, { message: 'La contrasena debe tener al menos 6 caracteres.' }),
 });
 const CreateClient = FormSchema.omit({ id: true });
 

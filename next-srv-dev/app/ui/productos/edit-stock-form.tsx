@@ -10,7 +10,7 @@ import { Button } from "../button";
 import Link from "next/link";
 import { Producto } from '../../lib/definitions';
 
-export default function AñadirStock({productos}:{productos: Producto[]}) {
+export default function ReponerStock({productos}:{productos: Producto[]}) {
   const initialState: StateEditStock = { message: null, errors: {} };
   const [state, formAction] = useActionState(editStock, initialState);
   return (
@@ -44,7 +44,7 @@ export default function AñadirStock({productos}:{productos: Producto[]}) {
             htmlFor="stock"
             className="mb-2 block text-sm font-medium"
           >
-            Añadir Stock
+            Aniadir Stock
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -71,7 +71,7 @@ export default function AñadirStock({productos}:{productos: Producto[]}) {
         </div>
         <div className="flex justify-center py-2 space-x-6">
           <Button className="border-2 p-2" type="submit">
-            Añadir stock
+            Aniadir stock
           </Button>
           <Link href={"/dashboard/productos"}>
             <Button className="border-2 p-2">Cancelar</Button>

@@ -78,7 +78,7 @@ export type State = {
         presupuesto?: string[];
         estado?: string[];
         cliente?: string[];
-    } | {};
+    } | object;
     message?: string | null;
 } | undefined;
 
