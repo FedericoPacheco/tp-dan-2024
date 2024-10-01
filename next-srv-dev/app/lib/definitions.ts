@@ -54,6 +54,40 @@ export type Producto = {
   categoria: Categoria;
 };
 
+export type Pedido = {
+  id: string;
+  fecha: string;
+  observaciones: string;
+  total: number;
+  historialEstados: HistorialPedido[];
+  estado: EstadoPedido;
+  detalles: DetallePedido[];
+  cliente: Cliente;
+  usuario: UsuarioHabilitado;
+  obra : Obra;
+};
+
+export type EstadoPedido = 'RECIBIDO' | 'ACEPTADO' | 'RECHAZADO' | 'CANCELADO' | 'EN_PREPARACION' | 'ENTREGADO';
+
+export type HistorialPedido = {
+  estado: EstadoPedido;
+  fecha: string;
+  detalle: string;
+  userEstado: UsuarioHabilitado;
+};
+export type DetallePedido = {
+  idProducto: number;
+  cantidad: number;
+};
+export type PedidoSegmentado = {
+  pedidosRecibidos: Pedido[];
+  pedidosAceptados: Pedido[];
+  pedidosRechazados: Pedido[];
+  pedidosCancelados: Pedido[];
+  pedidosEnPreparacion: Pedido[];
+  pedidosEntregados: Pedido[];
+};
+
 export interface ClientResponse extends Response {
   json(): Promise<Cliente>;
 }

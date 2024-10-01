@@ -48,11 +48,11 @@ public class PedidoService {
     // TODO: validar que usuario y obra pertenecen al cliente?
     @SuppressWarnings("null")
     public Pedido save(PedidoDTO dto) {
-    
+        System.out.println(dto.getProductos());
         Pedido pedido = calcularTotalPedido(dto);
+
         try {
             ClienteDTO cliente = restTemplate.getForObject(URL_CLIENTES + pedido.getIdCliente(), ClienteDTO.class);
-            
             // Evaluar si el monto del cliente supera el máximo descubierto
             if (this.calcularMontoCliente(pedido.getIdCliente(), pedido.getTotal()).compareTo(cliente.getMaximoDescubierto()) > 0)
                 pedido.setEstado(EstadoPedido.RECHAZADO);  
@@ -65,6 +65,7 @@ public class PedidoService {
                     pedido.setEstado(EstadoPedido.ACEPTADO);
             } 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             pedido.setEstado(EstadoPedido.RECIBIDO);    
         }
         pedidoRepository.save(pedido);
@@ -78,6 +79,7 @@ public class PedidoService {
         Pedido pedido = new Pedido(dto);
 
         List<DetallePedido> detallesInvalidos = new ArrayList<>();
+
         for (DetallePedido detalle : pedido.getDetalles()) {
             try {
                 // Llamar a ms-productos
