@@ -29,6 +29,13 @@ public class UsuarioHabilitadoService {
         return usuarioHabilitadoRepository.findById(id);
     }
 
+    public Optional<UsuarioHabilitado> findByEmail(String email) {
+        return usuarioHabilitadoRepository.findByCorreoElectronico(email);
+    }
+    public List<UsuarioHabilitado> findByClient(Integer idCliente) {
+        return usuarioHabilitadoRepository.findUsuarioHabilitadosByClienteId(idCliente);
+    }
+
     public UsuarioHabilitado save(UsuarioHabilitado usuarioHabilitado) {
         return usuarioHabilitadoRepository.save(usuarioHabilitado);
     }

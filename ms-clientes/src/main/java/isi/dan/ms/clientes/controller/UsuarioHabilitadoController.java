@@ -1,5 +1,6 @@
 package isi.dan.ms.clientes.controller;
 
+import isi.dan.msclientes.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,23 @@ public class UsuarioHabilitadoController {
         Optional<UsuarioHabilitado> optionalUsuarioHabilitado = usuarioHabilitadoService.findById(id);
         if (optionalUsuarioHabilitado.isPresent())
             return ResponseEntity.ok(optionalUsuarioHabilitado.get());
+        else
+            return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/searchByEmail")
+    public ResponseEntity<UsuarioHabilitado>  getByEmail(@RequestParam String email) {
+        Optional<UsuarioHabilitado> optionalUsuarioHabilitado = usuarioHabilitadoService.findByEmail(email);
+        if (optionalUsuarioHabilitado.isPresent())
+            return ResponseEntity.ok(optionalUsuarioHabilitado.get());
+        else
+            return ResponseEntity.notFound().build();
+    }
+    @GetMapping("/searchByCliente")
+    public ResponseEntity<List<UsuarioHabilitado>> getByEmail(@RequestParam Integer idCliente) {
+        List<UsuarioHabilitado> usuariosHabilitados = usuarioHabilitadoService.findByClient(idCliente);
+        if (!usuariosHabilitados.isEmpty())
+            return ResponseEntity.ok(usuariosHabilitados);
         else
             return ResponseEntity.notFound().build();
     }

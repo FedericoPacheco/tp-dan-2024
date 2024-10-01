@@ -28,7 +28,7 @@ services:
     image: dpage/pgadmin4:latest
     container_name: ms-productos-pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: mdomingu@gmail.com
+      PGADMIN_DEFAULT_EMAIL: mdomingu@gmail.comp
       PGADMIN_DEFAULT_PASSWORD: pgdan
     ports:
       - "8032:80"

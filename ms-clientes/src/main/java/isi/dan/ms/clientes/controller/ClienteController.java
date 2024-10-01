@@ -40,6 +40,22 @@ public class ClienteController {
         else
             return ResponseEntity.notFound().build();
     }
+    @GetMapping("/searchByEmail")
+    public ResponseEntity<Cliente> getByEmail(@RequestParam String email) {
+        Optional<Cliente> optionalCliente = clienteService.findByEmail(email);
+        if (optionalCliente.isPresent())
+            return ResponseEntity.ok(optionalCliente.get());
+        else
+            return ResponseEntity.notFound().build();
+    }
+    @GetMapping("/searchByCuit")
+    public ResponseEntity<Cliente> getByCuit(@RequestParam String cuit) {
+        Optional<Cliente> optionalCliente = clienteService.findByCuit(cuit);
+        if (optionalCliente.isPresent())
+            return ResponseEntity.ok(optionalCliente.get());
+        else
+            return ResponseEntity.notFound().build();
+    }
 
     @PostMapping
     public Cliente create(@Valid @RequestBody Cliente cliente) {

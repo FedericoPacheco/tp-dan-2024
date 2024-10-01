@@ -56,6 +56,7 @@ public class Pedido {
         this.setEstado(EstadoPedido.INICIADO);
         
         this.detalles = new ArrayList<>();
+
         for (OrdenCompraDTO ordenCompra : dto.getProductos()) {
             DetallePedido detalle = new DetallePedido();
             detalle.setIdProducto(ordenCompra.getIdProducto());
