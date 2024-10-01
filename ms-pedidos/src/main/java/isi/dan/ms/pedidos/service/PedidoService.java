@@ -22,15 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 @Service
 public class PedidoService {
     
-    // Pre-eureka
-    //public static String URL_PRODUCTOS = "http://ms-productos-svc:8080/api/productos/";
-    //public static String URL_CLIENTES = "http://ms-clientes-svc:8080/api/clientes/";
-
     public static String URL_PRODUCTOS = "http://ms-productos/api/productos/";
     public static String URL_CLIENTES = "http://ms-clientes/api/clientes/";
 
@@ -43,9 +37,6 @@ public class PedidoService {
     @Autowired
     RestTemplate restTemplate;
     
-    Logger log = LoggerFactory.getLogger(PedidoService.class);
-    
-    // TODO: validar que usuario y obra pertenecen al cliente?
     @SuppressWarnings("null")
     public Pedido save(PedidoDTO dto) {
         System.out.println(dto.getProductos());
@@ -84,24 +75,20 @@ public class PedidoService {
             try {
                 // Llamar a ms-productos
                 ProductoDTO producto = restTemplate.getForObject(URL_PRODUCTOS + detalle.getIdProducto(), ProductoDTO.class);
+                
                 detalle.setPrecioUnitario(producto.getPrecio());
                 detalle.setDescuento(producto.getDescuentoPromocional());
-                /* 
-                detalle.setPrecioUnitario(
-                    restTemplate.getForObject(URL_PRODUCTOS + "precio/" + detalle.getIdProducto(), BigDecimal.class));
-                detalle.setDescuento(
-                    restTemplate.getForObject(URL_PRODUCTOS + "descuento-Promocional/" + detalle.getIdProducto(), BigDecimal.class));            
-                */
-           }
-            catch (HttpClientErrorException e) {
-                detallesInvalidos.add(detalle);
-            }
-            detalle.setPrecioTotal(
+                detalle.setPrecioTotal(
                 BigDecimal.valueOf(detalle.getCantidad()).multiply(
                     detalle.getPrecioUnitario()).multiply(
                         BigDecimal.ONE.subtract(detalle.getDescuento()))
-            );
-            pedido.setTotal(pedido.getTotal().add(detalle.getPrecioTotal()));
+                );
+                
+                pedido.setTotal(pedido.getTotal().add(detalle.getPrecioTotal()));
+            }
+            catch (HttpClientErrorException e) {
+                detallesInvalidos.add(detalle);
+            }
         }
         // Remover productos que no existen de los detalles        
         pedido.getDetalles().removeAll(detallesInvalidos);

@@ -1,0 +1,22 @@
+# Crear red
+# docker network create backend-net
+
+# Armar todo y correr
+# docker-compose -f ./rabbit-mq/docker-compose.yml up -d 
+
+services:
+  # Credenciales:
+  # User: guest
+  # Pass: guest
+  rabbit-mq:
+    image: rabbitmq:3-management
+    container_name: rabbit-mq-svc
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true

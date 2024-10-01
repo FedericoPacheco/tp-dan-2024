@@ -17,8 +17,7 @@ public class HistorialPedido {
     EstadoPedido estado;
     Instant fecha;
     String detalle;
-    // No sé qué es el "userEstado" que menciona el enunciado
-
+    
     public HistorialPedido(EstadoPedido estado) {
         this.estado = estado;
         this.fecha = Instant.now().minus(Pedido.GMT_ARGENTINA, ChronoUnit.HOURS);

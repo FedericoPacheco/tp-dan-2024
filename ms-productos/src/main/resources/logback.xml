@@ -1,0 +1,35 @@
+<configuration>
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${GRAYLOG_HOST}</graylogHost>
+        <graylogPort>${GRAYLOG_PORT}</graylogPort>
+        <maxChunkSize>508</maxChunkSize>
+        <useCompression>true</useCompression>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <originHost>ms-productos</originHost>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>false</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%n</pattern>
+            </fullPatternLayout>
+            <staticField>app_name:ms-productos</staticField>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="GELF" />
+    </root>
+    <!-- Evitar que se loggueen cosas innecesarias -->
+    <logger name="com.netflix"          level="OFF"/>
+    <logger name="com.zaxxer"           level="OFF"/>
+    <logger name="com.rabbitmq"         level="OFF"/>
+    <logger name="org.springframework"  level="OFF"/>
+    <logger name="org.mongodb"          level="OFF"/>
+    <logger name="org.apache"           level="OFF"/>
+    <logger name="org.hibernate"        level="OFF"/>
+    <logger name="io.prometheus"        level="OFF"/>
+    <logger name="jdk"                  level="OFF"/>
+</configuration>

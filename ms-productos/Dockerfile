@@ -1,5 +1,4 @@
 # Stage 1: Build Maven dependencies
-#FROM maven:3.9.6-eclipse-temurin-21 AS dependencies
 FROM maven:3.9.8-eclipse-temurin-22 AS dependencies
 WORKDIR /app
 
@@ -10,7 +9,6 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 # Stage 2: Build the JAR file
-#FROM maven:3.9.6-eclipse-temurin-21  AS build
 FROM maven:3.9.8-eclipse-temurin-22 AS build
 WORKDIR /app
 
@@ -24,7 +22,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Stage 3: Run the JAR file
-#FROM eclipse-temurin:21-jre-alpine
 FROM eclipse-temurin:22-jdk-alpine
 WORKDIR /app
 

@@ -1,0 +1,82 @@
+# Armar todo y correr
+# docker-compose -f ./graylog/docker-compose.yml up --build -d
+
+# Ejemplos de configuración:
+# https://github.com/Graylog2/docker-compose/blob/main/cluster/docker-compose.yml
+# https://go2docs.graylog.org/current/downloading_and_installing_graylog/docker_installation.htm
+
+services:
+  mongo:
+    image: mongo
+    container_name: graylog-mongo
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - graylog-net
+
+  opensearch:
+    image: opensearchproject/opensearch 
+    container_name: graylog-opensearch
+    restart: always
+    volumes:
+      - opensearch-data:/data/db
+    environment:
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: Opensearch-dan-2024-pass
+      discovery.type: single-node
+      plugins.security.ssl.http.enabled: false
+      plugins.security.disabled: true
+    networks:
+      - graylog-net
+
+
+  # 1) Acceder: http://localhost:9000
+  # User: admin
+  # Pass: graylog-dan-super-secret
+
+  # 2) Configurar en interfaz web:
+  # 2.1) Ir a System > Inputs
+  # 2.2) Seleccionar "GELF UDP" de la lista desplegable
+  # 2.3) Click en "Launch new input"
+  # 2.4) Setear título y puerto 12201 y guardar
+
+  # 3) Troubleshooting para el error: "Deflector exists as an index and is not an alias"
+  #     3.1) Volver a configurar el input, eliminando el antiguo
+  #     3.2) Probar hacer: System > Indices > Maintenance > Cleanup & recalculate all index ranges
+
+  svc:
+    image: graylog/graylog:6.0.4
+    container_name: graylog-svc
+    volumes:
+      - graylog-data:/data
+    ports:
+      - "9000:9000"        # Interfaz web y REST API
+      - "1514:1514"        # Syslog TCP
+      - "1514:1514/udp"    # Syslog UDP
+      - "12201:12201"      # GELF TCP
+      - "12201:12201/udp"  # GELF UDP
+    environment:
+      GRAYLOG_PASSWORD_SECRET: graylog-dan-super-secret
+      # https://tools.keycdn.com/sha256-online-generator
+      GRAYLOG_ROOT_PASSWORD_SHA2: db58d428f9a0dae0a30231931ea85ee900ab6cf05bc1113cb41772ad3abe8d98
+      GRAYLOG_MONGODB_URI: mongodb://graylog-mongo:27017/graylog
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://graylog-opensearch:9200
+      GRAYLOG_HTTP_EXTERNAL_URI: http://localhost:9000/
+    depends_on:
+      - mongo
+      - opensearch
+    networks:
+      - graylog-net
+      - backend-net
+
+networks:
+  backend-net:
+    external: true
+  graylog-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  opensearch-data:
+  graylog-data:
+

@@ -1,0 +1,51 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Monitorear prometheus mismo
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [localhost:9090]
+
+
+  # Configuración estática
+  #- job_name: 'ms-pedidos'
+  #  metrics_path: /actuator/prometheus
+  #  static_configs:
+  #    - targets:
+  #      - ms-pedidos-svc-1:8080
+  #      - ms-pedidos-svc-2:8080
+
+  # Encontrar los sercicios dinámicamente
+  - job_name: 'eureka'
+    metrics_path: /actuator/prometheus
+    eureka_sd_configs:
+    - server: http://eureka-svc:8761/eureka
+
+  # Troubleshooting:
+  # * Acceder desde el navegador a: 
+  #   http://localhost:8761/eureka/apps
+  #   http://http://localhost:8761/ 
+  # Verificar que los microservicios están registrados
+  # * Ver que tanto Prometheus como Eureka están en la misma red. Desde otro servicio se puede hacer ping y peticiones 
+  # http mediante "curl" (para instalarlo correr los comandos: "apk update", "apk add curl") a prometheus. 
+  # A la inversa no pude probarlo porque la imagen tiene configuraciones de seguridad que no sé sortear
+  # * Agregar una dependencia extra a los servicios (aparte de actuator): micrometer-registry-prometheus
+  # * Agregar lo siguiente al application.properties de los servicios: 
+  #     management.endpoints.web.exposure.include=health,info,metrics,prometheus
+  #     management.endpoint.prometheus.enabled=true
+  #     management.endpoint.metrics.enabled=true
+  #     management.metrics.export.prometheus.enabled=true
+  # * Verificar que se puede acceder a los endpoints de los servicios: /actuator/health, /actuator/info, /actuator/metrics, /actuator/prometheus
+  # * Bajar el nivel de log de prometheus a debug
+  # * Reiniciar los servicios
+  # * NO poner por accidente "/" al final de los endpoints (MUY IMPORTANTE)
+  # Enlaces: 
+  #   https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus-eureka.yml
+  #   https://prometheus.io/docs/prometheus/latest/configuration/configuration/#eureka_sd_config
+  #   https://medium.com/nerd-for-tech/building-spring-boot-microservices-monitoring-with-prometheus-and-grafana-and-log-aggregation-5ed9ca7dda36
+
+
+
+

@@ -15,7 +15,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class DetallePedido {
-    //private Producto producto;
     private Integer idProducto;
     private Integer cantidad;
     private BigDecimal precioUnitario;
